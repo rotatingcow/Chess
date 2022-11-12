@@ -9,7 +9,8 @@ public class AlphaBetaChess {
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         GUI ui = new GUI();
-        gameFrame.add(userInterface);
+        ui.paintComponents(null);
+        gameFrame.add(ui);
         gameFrame.setSize(750,750);
         gameFrame.setVisible(true);
        
