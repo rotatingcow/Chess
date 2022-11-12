@@ -1,10 +1,8 @@
-
 import javax.swing.*;
 import java.awt.*;
 
-
 public class AlphaBetaChess {
-    
+
     public static void main(String[] args) {
         JFrame gameFrame = new JFrame("Chess");
         
