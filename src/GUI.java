@@ -1,18 +1,25 @@
 
-import java.awt.*; 
+import java.awt.*;
+import java.io.File;
+
 import javax.swing.*;
 import javax.swing.event.*;
 
 public class GUI extends JPanel implements MouseInputListener {
     int x=15 , y=15;
 
+
+
+
     public void paint(Graphics graphic){
         graphic.setColor(Color.BLUE);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
-        Image rookWhite = new ImageIcon("/Users/benarkonovich/Documents/GitHub/Chess/images/rook_white.png").getImage();
+        //System.out.println(new File("rook_white.png").getAbsolutePath());
+        Image rookWhite = new ImageIcon(new File("rook_black.png").getAbsolutePath()).getImage();
+
         
-        //graphic.fillRect(x, y, 50, 50);
+        
 
         for(int c = 1; c< 9; c++){
             for(int r = 1; r < 9; r++){
@@ -55,14 +62,14 @@ public class GUI extends JPanel implements MouseInputListener {
     }
     @Override
     public void mouseDragged(java.awt.event.MouseEvent e) {
-        x = e.getX();
-        y= e.getY();
-        repaint();
         
     }
     @Override
     public void mouseMoved(java.awt.event.MouseEvent e) {
-        // TODO Auto-generated method stub
+        x = e.getX();
+        y= e.getY();
+        repaint();
+        
         
     }
 
