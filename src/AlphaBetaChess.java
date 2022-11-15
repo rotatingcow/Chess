@@ -17,13 +17,13 @@ public class AlphaBetaChess {
         gameFrame.setVisible(true);
 
         Board m_board = new Board();
-        boolean repeat = true;
+        boolean repeat = false;
         if(repeat){
-            m_board.resetBoard();
-            System.out.println("og board\n" + m_board.getBoard());
-            m_board.changeBoard("rnb1k1rn/p1p3pp/1p6/4p3/4P3/6P1/PPPP2K1/RNBB4 b ga e3 0 10");
-            System.out.println("new board\n" + m_board.getBoard());
-            repeat = false;
+            m_board.resetBoard(false);
+            System.out.println(m_board.WP);
+            System.out.println("\n\n");
+            m_board.changeBoard("n2rnrk1/ppb1p1pp/2p2p2/8/5P2/5QPq/PP1PPK1P/NB1R2BR w - - 1 10",false);
+            System.out.println(m_board.WP + " ");
         }
  
     }

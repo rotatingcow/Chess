@@ -7,10 +7,7 @@ import javax.swing.event.*;
 
 public class GUI extends JPanel implements MouseInputListener {
     int x=15 , y=15;
-
-
-
-
+    
     public void paint(Graphics graphic){
         graphic.setColor(Color.BLUE);
         this.addMouseListener(this);

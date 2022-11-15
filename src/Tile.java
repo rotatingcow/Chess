@@ -29,6 +29,7 @@ public abstract class Tile {
 
     public abstract boolean isTileOccupied();
 
+    
     public abstract Piece getPiece();
 
 
@@ -58,18 +59,15 @@ public abstract class Tile {
             super(tileCoordinate);
             this.pieceOnTile = pieceOnTile;
         }
+
         @Override
         public boolean isTileOccupied() {
             return true;
         }
+        
         @Override
         public Piece getPiece() {
             return this.pieceOnTile;
         }
     }
-
-
-
-
-    
 }
