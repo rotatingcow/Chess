@@ -6,18 +6,7 @@ public class Board {
     public long WP = 0L, BP = 0L, WN = 0L, BN = 0L, WR = 0L, BR = 0L, WQ = 0L, BQ = 0L, WB = 0L, BB = 0L, WK = 0L, BK = 0L;
 
     public Board(){
-        this.WP = WP;
-        this.WR = WR;
-        this.WN = WN;
-        this.WB =WB;
-        this.WQ = WQ;
-        this.WK = WK;
-        this.BP = BP;
-        this.BR = BR;
-        this.BN = BN;
-        this.BB = BB;
-        this.BQ = BQ;
-        this.BK = BK;
+    
     }
 
 
@@ -58,44 +47,42 @@ public class Board {
             System.out.println(Arrays.toString(newChessBoard[i]));
         }
     }
+//, long WP, long WN, long WB, long WQ, long WK, long WR, long BP, long BN, long BB, long BQ, long BK, long BR
 
-
-    public void arrayToBitBoard(boolean draw,char[][] chessboard, long WP, long WN, long WB, long WQ, long WK, long WR, long BP, long BN, long BB, long BQ, long BK, long BR){
+    public void arrayToBitBoard(boolean draw,char[][] chessboard){
         String binary;
         
         for(int i = 0; i<64; i++){
             binary = "0000000000000000000000000000000000000000000000000000000000000000";
             binary = binary.substring(i,i+1)+"1"+binary.substring(0,i);
             switch(chessboard[i/8][i%8]){
-                case 'P': this.WP += stringToBitboard(binary);
+                case 'P': WP += stringToBitboard(binary);
                     break;
-                case 'R': this.WR += stringToBitboard(binary);
+                case 'R': WR += stringToBitboard(binary);
                     break; 
-                case 'N': this.WN += stringToBitboard(binary);
+                case 'N': WN += stringToBitboard(binary);
                     break;  
-                case 'B': this.WB += stringToBitboard(binary);
+                case 'B': WB += stringToBitboard(binary);
                     break;   
-                case 'Q': this.WQ += stringToBitboard(binary);
+                case 'Q': WQ += stringToBitboard(binary);
                     break; 
-                case 'K': this.WK += stringToBitboard(binary);
+                case 'K': WK += stringToBitboard(binary);
                     break; 
-                case 'p': this.BP += stringToBitboard(binary);
+                case 'p': BP += stringToBitboard(binary);
                     break;
-                case 'r': this.BR += stringToBitboard(binary);
+                case 'r': BR += stringToBitboard(binary);
                     break; 
-                case 'n': this.BN += stringToBitboard(binary);
+                case 'n': BN += stringToBitboard(binary);
                     break;  
-                case 'b': this.BB += stringToBitboard(binary);
+                case 'b': BB += stringToBitboard(binary);
                     break;   
-                case 'q': this.BQ += stringToBitboard(binary);
+                case 'q': BQ += stringToBitboard(binary);
                     break; 
-                case 'k': this.BK += stringToBitboard(binary);
+                case 'k': BK += stringToBitboard(binary);
                     break;
             }
 
         }
-        
-        
     }
 
     public static long stringToBitboard(String binary){
@@ -163,7 +150,7 @@ public class Board {
                 for(int s = 0; s < num; s++){
                     newBoard[row][index] = ' ';
                     index++;
-                    if(row == 7){
+                    if(row == 7){ 
                         if(index == 7){
                             break;
                         }
@@ -183,11 +170,12 @@ public class Board {
             }
         }
         if(draw){
-            arrayToBitBoard(true,board, WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
+            arrayToBitBoard(true,board);
         }
         else{
-            arrayToBitBoard(false,board, WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
+            arrayToBitBoard(false,board);
         }
+       
         drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
             
     }
@@ -214,13 +202,11 @@ public class Board {
                 board[i][s] = startingBoard[i][s];
             }
         }
-        if(draw){
-            arrayToBitBoard(true,board, WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
-        }
-        else{
-            arrayToBitBoard(false,board, WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
-        }
+
+        arrayToBitBoard(true,board);
+        drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
     }
+    
 
 
 
