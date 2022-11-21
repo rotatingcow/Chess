@@ -31,6 +31,8 @@ public class GUI extends JPanel implements MouseInputListener {
         }
         graphic.drawImage(rookWhite, x, y, this);
     }
+
+    
     
     @Override
     public void mouseClicked(java.awt.event.MouseEvent e) {

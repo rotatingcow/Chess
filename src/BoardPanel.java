@@ -10,11 +10,13 @@ public class BoardPanel extends JPanel{
 
     public BoardPanel(char[][] board){
         super(new GridLayout(8,8));
+        this.setSize(800,800);
         this.boardTiles = new ArrayList<TilePanel>();
         
         for(int r = 0; r < board.length; r++){
-
+            System.out.println();
             for(int c=0; c < board[r].length ; c++){
+                System.out.print("ASA");
                 int row = r+1;
                 int col = c+1;
                 char currentChar = board[r][c];
@@ -45,9 +47,16 @@ public class BoardPanel extends JPanel{
                         break; 
                     case 'k': this.boardTiles.add(new TilePanel(new King(false),row+col));
                         break;
+                    default:
+                        break;
                 }
             }
         }
+        validate();
+    }
+
+    public List<TilePanel> getboardTiles(){
+        return boardTiles;
     }
     
 }

@@ -1,5 +1,7 @@
 import java.util.Arrays;
 
+import Pieces.Piece;
+
 public class Board {
 
 
@@ -53,6 +55,7 @@ public class Board {
         String binary;
         
         for(int i = 0; i<64; i++){
+ 
             binary = "0000000000000000000000000000000000000000000000000000000000000000";
             binary = binary.substring(i,i+1)+"1"+binary.substring(0,i);
             switch(chessboard[i/8][i%8]){
@@ -99,6 +102,7 @@ public class Board {
         }
 
     }
+
     
 
     public String getStringBoard(){

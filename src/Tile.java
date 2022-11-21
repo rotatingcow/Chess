@@ -1,6 +1,8 @@
 import java.util.HashMap;
 import java.util.Map;
 
+import Pieces.Piece;
+
 public abstract class Tile {
     protected final int tileCoordinate;
 
