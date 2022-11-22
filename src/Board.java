@@ -51,7 +51,7 @@ public class Board {
     }
 //, long WP, long WN, long WB, long WQ, long WK, long WR, long BP, long BN, long BB, long BQ, long BK, long BR
 
-    public void arrayToBitBoard(boolean draw,char[][] chessboard){
+    public void arrayToBitBoard(char[][] chessboard){
         String binary;
         
         for(int i = 0; i<64; i++){
@@ -121,9 +121,25 @@ public class Board {
     public char[][] getBoard(){
         return board;
     }
+
+    public void changeBoardArray(char[][] newBoard, boolean draw){
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                board[r][c] = newBoard [r][c];
+            }
+        }
+
+        if(draw){
+            arrayToBitBoard(board);
+            drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
+        }
+        else{
+            arrayToBitBoard(board);
+        }
+    }
     
    
-    public void changeBoard(String fen,boolean draw){
+    public void changeBoardFen(String fen,boolean draw){
         char[][] newBoard = {
             {'r','n','b','q','k','b','n','r'},
             {'p','p','p','p','p','p','p','p'},
@@ -174,13 +190,14 @@ public class Board {
             }
         }
         if(draw){
-            arrayToBitBoard(true,board);
+            arrayToBitBoard(board);
+            drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
         }
         else{
-            arrayToBitBoard(false,board);
+            arrayToBitBoard(board);
         }
        
-        drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
+        
             
     }
 
@@ -207,8 +224,13 @@ public class Board {
             }
         }
 
-        arrayToBitBoard(true,board);
-        drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
+        if(draw){
+            arrayToBitBoard(board);
+            drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
+        }
+        else{
+            arrayToBitBoard(board);
+        }
     }
     
 

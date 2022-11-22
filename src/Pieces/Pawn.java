@@ -19,4 +19,13 @@ public class Pawn extends Piece {
             return("black");
         }
     }
+    @Override
+    public char getChar(){
+        if(isLight){
+            return('P');
+        }else{
+            return('p');
+        }
+
+    }
 }

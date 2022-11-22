@@ -20,5 +20,14 @@ public class King extends Piece{
             return("black");
         }
     }
+    @Override
+    public char getChar(){
+        if(isLight){
+            return('K');
+        }else{
+            return('k');
+        }
+
+    }
     
 }

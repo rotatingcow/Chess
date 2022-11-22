@@ -17,34 +17,34 @@ public class BoardPanel extends JPanel{
             for(int c=0; c < board[r].length ; c++){
 
                 int row = r;
-                int col = c+1;
+                int col = c;
                 char currentChar = board[r][c];
                 switch (currentChar){
-                    case ' ': boardTiles.add(new TilePanel(row+col));
+                    case ' ': boardTiles.add(new TilePanel(row+col, (r*8)+c ));
                         break;
-                    case 'P': boardTiles.add(new TilePanel(new Pawn(true),row+col));
+                    case 'P': boardTiles.add(new TilePanel(new Pawn(true),row+col, (r*8)+c));
                         break;
-                    case 'R': boardTiles.add(new TilePanel(new Rook(true),row+col));
+                    case 'R': boardTiles.add(new TilePanel(new Rook(true),row+col, (r*8)+c));
                         break; 
-                    case 'N': boardTiles.add(new TilePanel(new Knight(true),row+col));
+                    case 'N': boardTiles.add(new TilePanel(new Knight(true),row+col, (r*8)+c));
                         break;  
-                    case 'B': boardTiles.add(new TilePanel(new Bishop(true),row+col));
+                    case 'B': boardTiles.add(new TilePanel(new Bishop(true),row+col, (r*8)+c));
                         break;   
-                    case 'Q': boardTiles.add(new TilePanel(new Queen(true),row+col));
+                    case 'Q': boardTiles.add(new TilePanel(new Queen(true),row+col, (r*8)+c));
                         break; 
-                    case 'K': boardTiles.add(new TilePanel(new King(true),row+col));
+                    case 'K': boardTiles.add(new TilePanel(new King(true),row+col, (r*8)+c));
                         break; 
-                    case 'p': boardTiles.add(new TilePanel(new Pawn(false),row+col));
+                    case 'p': boardTiles.add(new TilePanel(new Pawn(false),row+col, (r*8)+c));
                         break;
-                    case 'r': boardTiles.add(new TilePanel(new Rook(false),row+col));
+                    case 'r': boardTiles.add(new TilePanel(new Rook(false),row+col, (r*8)+c));
                         break; 
-                    case 'n': boardTiles.add(new TilePanel(new Knight(false),row+col));
+                    case 'n': boardTiles.add(new TilePanel(new Knight(false),row+col, (r*8)+c));
                         break;  
-                    case 'b': boardTiles.add(new TilePanel(new Bishop(false),row+col));
+                    case 'b': boardTiles.add(new TilePanel(new Bishop(false),row+col, (r*8)+c));
                         break;   
-                    case 'q': boardTiles.add(new TilePanel(new Queen(false),row+col));
+                    case 'q': boardTiles.add(new TilePanel(new Queen(false),row+col, (r*8)+c));
                         break; 
-                    case 'k': boardTiles.add(new TilePanel(new King(false),row+col));
+                    case 'k': boardTiles.add(new TilePanel(new King(false),row+col, (r*8)+c));
                         break;
                     default:
                         break;
@@ -60,6 +60,26 @@ public class BoardPanel extends JPanel{
 
     public List<TilePanel> getboardTiles(){
         return boardTiles;
+    }
+
+    public char[][] getBoardPos(){
+        char[][] board = {
+            {'r','n','b','q','k','b','n','r'},
+            {'p','p','p','p','p','p','p','p'},
+            {' ',' ',' ',' ',' ',' ',' ',' '},
+            {' ',' ',' ',' ',' ',' ',' ',' '},
+            {' ',' ',' ',' ',' ',' ',' ',' '},
+            {' ',' ',' ',' ',' ',' ',' ',' '},
+            {'P','P','P','P','P','P','P','P'},
+            {'R','N','B','Q','K','B','N','R'}
+        };
+
+        for(int i = 0; i < 64; i++){
+            char currentPiece = boardTiles.get(i).getPiece();
+            board[(i/8)][i%8] = currentPiece;
+        }
+
+        return(board);
     }
     
 }

@@ -19,4 +19,13 @@ public class Knight extends Piece {
             return("black");
         }
     }
+    @Override
+    public char getChar(){
+        if(isLight){
+            return('N');
+        }else{
+            return('n');
+        }
+
+    }
 }

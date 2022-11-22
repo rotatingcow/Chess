@@ -19,4 +19,13 @@ public class Queen extends Piece {
             return("black");
         }
     }
+    @Override
+    public char getChar(){
+        if(isLight){
+            return('Q');
+        }else{
+            return('q');
+        }
+
+    }
 }

@@ -21,6 +21,15 @@ public class Bishop extends Piece{
             return("black");
         }
     }
+    @Override
+    public char getChar(){
+        if(isLight){
+            return('B');
+        }else{
+            return('b');
+        }
+
+    }
 
 
 }

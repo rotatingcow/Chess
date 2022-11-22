@@ -11,5 +11,7 @@ public abstract class Piece {
     public abstract String getName();
 
     public abstract String getColor();
+
+    public abstract char getChar();
     
 }

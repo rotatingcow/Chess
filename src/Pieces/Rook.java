@@ -20,5 +20,14 @@ public class Rook extends Piece {
             return("black");
         }
     }
+    @Override
+    public char getChar(){
+        if(isLight){
+            return('R');
+        }else{
+            return('r');
+        }
+
+    }
 
 }
