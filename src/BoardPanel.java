@@ -10,47 +10,50 @@ public class BoardPanel extends JPanel{
 
     public BoardPanel(char[][] board){
         super(new GridLayout(8,8));
-        this.setSize(800,800);
         this.boardTiles = new ArrayList<TilePanel>();
         
         for(int r = 0; r < board.length; r++){
             System.out.println();
             for(int c=0; c < board[r].length ; c++){
-                System.out.print("ASA");
-                int row = r+1;
+
+                int row = r;
                 int col = c+1;
                 char currentChar = board[r][c];
                 switch (currentChar){
-                    case ' ': this.boardTiles.add(new TilePanel(row+col));
+                    case ' ': boardTiles.add(new TilePanel(row+col));
                         break;
-                    case 'P': this.boardTiles.add(new TilePanel(new Pawn(true),row+col));
+                    case 'P': boardTiles.add(new TilePanel(new Pawn(true),row+col));
                         break;
-                    case 'R': this.boardTiles.add(new TilePanel(new Rook(true),row+col));
+                    case 'R': boardTiles.add(new TilePanel(new Rook(true),row+col));
                         break; 
-                    case 'N': this.boardTiles.add(new TilePanel(new Knight(true),row+col));
+                    case 'N': boardTiles.add(new TilePanel(new Knight(true),row+col));
                         break;  
-                    case 'B': this.boardTiles.add(new TilePanel(new Bishop(true),row+col));
+                    case 'B': boardTiles.add(new TilePanel(new Bishop(true),row+col));
                         break;   
-                    case 'Q': this.boardTiles.add(new TilePanel(new Queen(true),row+col));
+                    case 'Q': boardTiles.add(new TilePanel(new Queen(true),row+col));
                         break; 
-                    case 'K': this.boardTiles.add(new TilePanel(new King(true),row+col));
+                    case 'K': boardTiles.add(new TilePanel(new King(true),row+col));
                         break; 
-                    case 'p': this.boardTiles.add(new TilePanel(new Pawn(false),row+col));
+                    case 'p': boardTiles.add(new TilePanel(new Pawn(false),row+col));
                         break;
-                    case 'r': this.boardTiles.add(new TilePanel(new Rook(false),row+col));
+                    case 'r': boardTiles.add(new TilePanel(new Rook(false),row+col));
                         break; 
-                    case 'n': this.boardTiles.add(new TilePanel(new Knight(false),row+col));
+                    case 'n': boardTiles.add(new TilePanel(new Knight(false),row+col));
                         break;  
-                    case 'b': this.boardTiles.add(new TilePanel(new Bishop(false),row+col));
+                    case 'b': boardTiles.add(new TilePanel(new Bishop(false),row+col));
                         break;   
-                    case 'q': this.boardTiles.add(new TilePanel(new Queen(false),row+col));
+                    case 'q': boardTiles.add(new TilePanel(new Queen(false),row+col));
                         break; 
-                    case 'k': this.boardTiles.add(new TilePanel(new King(false),row+col));
+                    case 'k': boardTiles.add(new TilePanel(new King(false),row+col));
                         break;
                     default:
                         break;
                 }
             }
+        }
+        for(int i = 0; i < boardTiles.size(); i++){
+            TilePanel thing = boardTiles.get(i);
+            this.add(thing);
         }
         validate();
     }

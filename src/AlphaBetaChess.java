@@ -24,31 +24,17 @@ public class AlphaBetaChess {
         BoardPanel frontBoard;
 
 
-        backBoard.resetBoard(true);
+        backBoard.resetBoard(false);
 
-            //m_board.changeBoard("n2rnrk1/ppb1p1pp/2p2p2/8/5P2/5QPq/PP1PPK1P/NB1R2BR w - - 1 10",false);
+        backBoard.changeBoard("rn1qkb1r/1p3ppp/p2pbn2/4p3/4P3/1NN1BP2/PPP3PP/R2QKB1R b KQkq - 0 8",false);
 
         frontBoard = new BoardPanel(backBoard.getBoard());
-            /*
-            for(int i = 0; i < frontBoard.boardTiles.size(); i++ ){
-                TilePanel element = frontBoard.boardTiles.get(i);
-                System.out.println(element.getInfo());
-            }
-             */
-        System.out.println(frontBoard.boardTiles.get(32).getClass());
-        
-        System.out.println(frontBoard.getSize());
-        
-        
-        //frontBoard.setVisible(true);
-        //gameFrame.pack();
-        gameFrame.add(frontBoard, BorderLayout.CENTER);
-      
-        gameFrame.setVisible(true);
 
-        System.out.println(gameFrame.getSize());
-        System.out.println(gameFrame.getComponentCount());
         
+
+        
+        gameFrame.add(frontBoard);
+        gameFrame.setVisible(true);
 
     }
 }
