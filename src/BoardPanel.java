@@ -1,11 +1,15 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
+
+
 import Pieces.*;
 
 
-public class BoardPanel extends JPanel{
+public class BoardPanel extends JPanel implements MouseInputListener{
     List<TilePanel> boardTiles = null;
 
     public BoardPanel(char[][] board){
@@ -63,23 +67,54 @@ public class BoardPanel extends JPanel{
     }
 
     public char[][] getBoardPos(){
-        char[][] board = {
-            {'r','n','b','q','k','b','n','r'},
-            {'p','p','p','p','p','p','p','p'},
-            {' ',' ',' ',' ',' ',' ',' ',' '},
-            {' ',' ',' ',' ',' ',' ',' ',' '},
-            {' ',' ',' ',' ',' ',' ',' ',' '},
-            {' ',' ',' ',' ',' ',' ',' ',' '},
-            {'P','P','P','P','P','P','P','P'},
-            {'R','N','B','Q','K','B','N','R'}
-        };
+        char[][] board = new char[8][8];
 
         for(int i = 0; i < 64; i++){
             char currentPiece = boardTiles.get(i).getPiece();
-            board[(i/8)][i%8] = currentPiece;
+            int row = i/8;
+            int column = i%8;
+
+            board[row][column] = currentPiece;
         }
 
         return(board);
+    }
+
+
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+        
+        
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        
+    }
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        
     }
     
 }

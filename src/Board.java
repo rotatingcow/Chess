@@ -7,12 +7,8 @@ public class Board {
 
     public long WP = 0L, BP = 0L, WN = 0L, BN = 0L, WR = 0L, BR = 0L, WQ = 0L, BQ = 0L, WB = 0L, BB = 0L, WK = 0L, BK = 0L;
 
-    public Board(){
-    
-    }
-
-
     public char[][] board = {
+
         {'r','n','b','q','k','b','n','r'},
         {'p','p','p','p','p','p','p','p'},
         {' ',' ',' ',' ',' ',' ',' ',' '},
@@ -21,12 +17,29 @@ public class Board {
         {' ',' ',' ',' ',' ',' ',' ',' '},
         {'P','P','P','P','P','P','P','P'},
         {'R','N','B','Q','K','B','N','R'}
+
     };
+
+    public void resetBitBoards(){
+        WP = 0L;
+        BP = 0L;
+        WN = 0L;
+        BN = 0L; 
+        WR = 0L;
+        BR = 0L; 
+        WQ = 0L;
+        BQ = 0L;
+        WB = 0L;
+        BB = 0L;
+        WK = 0L;
+        BK = 0L;
+    }
 
 
 
     public void drawArray(long WP, long WN, long WB, long WQ, long WK, long WR, long BP, long BN, long BB, long BQ, long BK, long BR){
         String newChessBoard[][] = new String[8][8];
+        
 
         for(int i = 0; i<64; i++){
             newChessBoard[i/8][i%8] = " ";
@@ -45,7 +58,7 @@ public class Board {
             if( ((this.BQ>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "q";}
             if( ((this.BK>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "k";}
         }
-        for(int i = 0; i< 8; i++){
+        for(int i = 0; i < 8; i++){
             System.out.println(Arrays.toString(newChessBoard[i]));
         }
     }
@@ -53,8 +66,11 @@ public class Board {
 
     public void arrayToBitBoard(char[][] chessboard){
         String binary;
+        resetBitBoards();
+
+
         
-        for(int i = 0; i<64; i++){
+        for(int i = 0; i < 64; i++){
  
             binary = "0000000000000000000000000000000000000000000000000000000000000000";
             binary = binary.substring(i,i+1)+"1"+binary.substring(0,i);
@@ -122,13 +138,9 @@ public class Board {
         return board;
     }
 
-    public void changeBoardArray(char[][] newBoard, boolean draw){
-        for(int r = 0; r < 8; r++){
-            for(int c = 0; c < 8; c++){
-                board[r][c] = newBoard [r][c];
-            }
-        }
-
+    public void changeBoardArray(char[][] newBoard, boolean draw){         
+        board = newBoard;
+            
         if(draw){
             arrayToBitBoard(board);
             drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
@@ -153,36 +165,37 @@ public class Board {
         int index = 0;
         int row = 0;
         for(int i = 0; i < fen.length(); i++){
+
             char fenAt = fen.charAt(i);
-            
             int num = fenAt - '0';
-            //System.out.println("fenChar = " + fenAt+"| " + (num<9)+ "| "+row +" "+index);
-            if(row == 7){
-                if(index == 7){
-                    break;
-                }
-            }
+
             if(fenAt == '/'){
                 row++;
                 index = 0;
             }
             else if(num < 9){
                 for(int s = 0; s < num; s++){
+                    
                     newBoard[row][index] = ' ';
                     index++;
-                    if(row == 7){ 
-                        if(index == 7){
-                            break;
-                        }
+                    if(row == 7 && index == 8){ 
+                        break;
                     }
-    
+                
                 }
             } 
             else{
                 newBoard[row][index] = fenAt;
                 index++;
             }
+
+            if(row == 7){
+                if(index == 8){
+                    break;
+                }
+            }
         }
+        
         for(int i = 0; i < 8; i++){
             for(int s = 0; s < 8; s++){
                 //System.out.println("old board = "+ board[i][s] + "| new board = "+ newBoard[i][s]);
@@ -218,15 +231,15 @@ public class Board {
         {'R','N','B','Q','K','B','N','R'}
         };
 
-        for(int i = 0; i < 8; i++){
-            for(int s = 0; s < 8; s++){
-                board[i][s] = startingBoard[i][s];
-            }
-        }
-
+     
+        board = startingBoard;
+        getStringBoard();
+    
         if(draw){
+            System.out.println("draw!");
             arrayToBitBoard(board);
             drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
+            
         }
         else{
             arrayToBitBoard(board);

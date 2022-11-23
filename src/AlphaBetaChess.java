@@ -15,25 +15,23 @@ public class AlphaBetaChess {
         gameFrame.setSize(800,800);
         gameFrame.setLayout(new BorderLayout());
 
-        
+
        //GUI ui = new GUI();
        //gameFrame.add(ui);
        
         Board backBoard = new Board();
         BoardPanel frontBoard;
 
-        backBoard.changeBoardFen("rn1qkb1r/1p3ppp/p2pbn2/4p3/4P3/1NN1BP2/PPP3PP/R2QKB1R b KQkq - 0 8",false);
+        backBoard.changeBoardFen("2r2rk1/1p3pp1/4p2p/pB6/P1P3P1/3P4/3NK1P1/q6N b - - 1 25",true);
+
         frontBoard = new BoardPanel(backBoard.getBoard());
         gameFrame.add(frontBoard);
-
+        gameFrame.pack();
 
         backBoard.resetBoard(true);
+        System.out.println("\n\n\n");
 
-        System.out.println("\n\n\n\n");
         backBoard.changeBoardArray(frontBoard.getBoardPos(), true);
-        backBoard.getStringBoard();
-
-
 
         gameFrame.setVisible(true);
 
