@@ -17,7 +17,7 @@ public class GUI extends JPanel implements MouseInputListener {
         for(int c = 1; c< 9; c++){
             for(int r = 1; r < 9; r++){
                 if((r+c) % 2 == 0){
-                    graphic.setColor(new Color(255,248,238));
+                    graphic.setColor(new Color(255,248,238)); 
                 }
                 else{
                     graphic.setColor(new Color(102, 61, 20));

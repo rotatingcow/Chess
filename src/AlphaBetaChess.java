@@ -22,7 +22,7 @@ public class AlphaBetaChess {
         Board backBoard = new Board();
         BoardPanel frontBoard;
 
-        backBoard.changeBoardFen("2r2rk1/1p3pp1/4p2p/pB6/P1P3P1/3P4/3NK1P1/q6N b - - 1 25",true);
+        backBoard.changeBoardFen("2r2rkb/p4p1p/b1p3q1/4p1P1/P6Q/1B3P2/3PP3/BR3KR1 w G - 3 20",true);
 
         frontBoard = new BoardPanel(backBoard.getBoard());
         gameFrame.add(frontBoard);
