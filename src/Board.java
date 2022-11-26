@@ -6,7 +6,7 @@ public class Board {
 
 
     public long WP = 0L, BP = 0L, WN = 0L, BN = 0L, WR = 0L, BR = 0L, WQ = 0L, BQ = 0L, WB = 0L, BB = 0L, WK = 0L, BK = 0L;
-
+    Moves moveFinder = new Moves();
     public char[][] board = {
 
         {'r','n','b','q','k','b','n','r'},
@@ -34,6 +34,16 @@ public class Board {
         WK = 0L;
         BK = 0L;
     }
+
+
+    public String getPossibleMovesWhite(String history, boolean readable){
+        if(!readable){
+            return(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+        }else{
+            return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK)));
+        }
+    }
+        
 
 
 
@@ -236,7 +246,6 @@ public class Board {
         getStringBoard();
     
         if(draw){
-            System.out.println("draw!");
             arrayToBitBoard(board);
             drawArray(WP, WN, WB, WQ, WK, WR, BP, BN, BB, BQ, BK, BR);
             

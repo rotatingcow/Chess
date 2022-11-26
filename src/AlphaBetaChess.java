@@ -10,6 +10,8 @@ import java.awt.*;
 public class AlphaBetaChess {
 
     public static void main(String[] args) {
+
+        //org.openjdk.jmh.Main.main(args);
         JFrame gameFrame = new JFrame("Chess");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         gameFrame.setSize(800,800);
@@ -21,18 +23,16 @@ public class AlphaBetaChess {
        
         Board backBoard = new Board();
         BoardPanel frontBoard;
-
-        backBoard.changeBoardFen("2r2rkb/p4p1p/b1p3q1/4p1P1/P6Q/1B3P2/3PP3/BR3KR1 w G - 3 20",true);
-
+        backBoard.changeBoardFen("8/r6n/P6P/2PP4/3P4/8/1P3P2/8 w - - 0 1",false);
         frontBoard = new BoardPanel(backBoard.getBoard());
+
+
+        String possiblePawnMoves = backBoard.getPossibleMovesWhite("no", true);
+        System.out.println(possiblePawnMoves);
+
+
         gameFrame.add(frontBoard);
         gameFrame.pack();
-
-        backBoard.resetBoard(true);
-        System.out.println("\n\n\n");
-
-        backBoard.changeBoardArray(frontBoard.getBoardPos(), true);
-
         gameFrame.setVisible(true);
 
     }
