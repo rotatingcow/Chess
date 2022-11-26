@@ -23,11 +23,11 @@ public class AlphaBetaChess {
        
         Board backBoard = new Board();
         BoardPanel frontBoard;
-        backBoard.changeBoardFen("8/r6n/P6P/2PP4/3P4/8/1P3P2/8 w - - 0 1",false);
+        backBoard.changeBoardFen("8/8/8/4pP2/8/8/1P6/8 w - - 0 1",false);
         frontBoard = new BoardPanel(backBoard.getBoard());
 
 
-        String possiblePawnMoves = backBoard.getPossibleMovesWhite("no", true);
+        String possiblePawnMoves = backBoard.getPossibleMovesWhite("1434", true);
         System.out.println(possiblePawnMoves);
 
 
