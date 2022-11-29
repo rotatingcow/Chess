@@ -15,6 +15,7 @@ public class AlphaBetaChess {
         JFrame gameFrame = new JFrame("Chess");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         gameFrame.setSize(800,800);
+        gameFrame.setResizable(false);
         gameFrame.setLayout(new BorderLayout());
 
 
@@ -23,7 +24,7 @@ public class AlphaBetaChess {
        
         Board backBoard = new Board();
         BoardPanel frontBoard;
-        backBoard.changeBoardFen("8/8/8/4pP2/8/8/1P6/8 w - - 0 1",false);
+        backBoard.changeBoardFen("8/8/8/3n4/3PP1p1/8/P5P1/8 w - - 0 1",false);
         frontBoard = new BoardPanel(backBoard.getBoard());
 
 

@@ -31,13 +31,11 @@ public class TilePanel extends JPanel{
         else{
             this.setBackground(new Color(102, 61, 20));
         }
-
-
-
+        
         ImageIcon firstPng = new ImageIcon(new File("images/"+piece.getName()+"_"+piece.getColor()+".png").getAbsolutePath());   
         piecePng = new JLabel(new ImageIcon(firstPng.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH)));
         this.add(piecePng);
-
+        
     }
 
 
@@ -56,6 +54,21 @@ public class TilePanel extends JPanel{
         else{
             this.setBackground(new Color(102, 61, 20));
         }
+    }
+
+    public void setPiece(Piece piece){
+        if(piece == null){
+            this.empty = true;
+            this.remove(piecePng);
+        }else{
+            if(!empty){this.remove(piecePng);}
+            ImageIcon firstPng = new ImageIcon(new File("images/"+piece.getName()+"_"+piece.getColor()+".png").getAbsolutePath());   
+            piecePng = new JLabel(new ImageIcon(firstPng.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH)));
+            this.add(piecePng);
+            this.empty = false;
+        }
+        
+
     }
 
     public String getInfo(){
@@ -78,6 +91,11 @@ public class TilePanel extends JPanel{
         }else{
             return(' ');
         }
+        
+    }
+
+    public Piece getRealPiece(){
+        return piece;
         
     }
 

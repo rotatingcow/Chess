@@ -89,7 +89,7 @@ public class Moves {
         
         long possibility= PawnMoves&~(PawnMoves-1);
 
-        //While loops snap to each one in the bitboard.
+        //While loops snap to each piece in the bitboard.
         while (possibility != 0){
             int index=Long.numberOfTrailingZeros(possibility);
             list+=""+((index/8)+1)+((index%8)-1)+(index/8)+(index%8);

@@ -11,9 +11,16 @@ import Pieces.*;
 
 public class BoardPanel extends JPanel implements MouseInputListener{
     List<TilePanel> boardTiles = null;
+    private boolean firstClick = true;
+    private Piece piece = null;
+    private TilePanel firstTile = null;
+    JLabel coords = new JLabel("here!");
 
     public BoardPanel(char[][] board){
+        
         super(new GridLayout(8,8));
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
         this.boardTiles = new ArrayList<TilePanel>();
         
         for(int r = 0; r < board.length; r++){
@@ -55,10 +62,13 @@ public class BoardPanel extends JPanel implements MouseInputListener{
                 }
             }
         }
+        //this.add(coords);
         for(int i = 0; i < boardTiles.size(); i++){
             TilePanel thing = boardTiles.get(i);
             this.add(thing);
+            
         }
+       
         validate();
     }
 
@@ -85,8 +95,32 @@ public class BoardPanel extends JPanel implements MouseInputListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
+        int row = e.getX()/80;
+        int col = e.getY()/80;
+        System.out.println(row + " "+ col);
         
+        //coords.setText(""+row);
+        for(int x = 0; x < boardTiles.size(); x++){
+            if(boardTiles.get(x).getMousePosition() != null){
+                if(firstClick){
+                    firstTile = boardTiles.get(x);
+                    piece = boardTiles.get(x).getRealPiece();
+                    System.out.println(piece.getChar());
+                    firstClick = false;
+                }else{
+                    boardTiles.get(x).setPiece(piece);
+                    firstTile.setPiece(null);
+                    boardTiles.get(x).revalidate();
+                    firstTile.revalidate();
+                    piece = null;
+                    firstClick = true;
+                }
+               
+                
+                //coords.setLocation(new Point((int)getMousePosition().getX(), (int) getMousePosition().getY()));
+               // coords.setText(""+(int)getMousePosition().getX()/80+ " "+  (int) getMousePosition().getY()/80);
+            }
+        }
     }
     @Override
     public void mousePressed(MouseEvent e) {
