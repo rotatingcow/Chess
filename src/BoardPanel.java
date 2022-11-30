@@ -99,7 +99,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         int col = e.getY()/80;
         System.out.println(row + " "+ col);
         
-        //coords.setText(""+row);
+        //coords.setText("+"+row);
         for(int x = 0; x < boardTiles.size(); x++){
             if(boardTiles.get(x).getMousePosition() != null){
                 if(firstClick){
