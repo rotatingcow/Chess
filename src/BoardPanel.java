@@ -12,8 +12,11 @@ import Pieces.*;
 public class BoardPanel extends JPanel implements MouseInputListener{
     List<TilePanel> boardTiles = null;
     private boolean firstClick = true;
-    private Piece piece = null;
-    private TilePanel firstTile = null;
+    private String toMove = "white";
+    private String startingSquare;
+    private String endingSquare;
+    private int moveNum;
+
     JLabel coords = new JLabel("here!");
 
     public BoardPanel(char[][] board){
@@ -90,64 +93,85 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         return(board);
     }
 
+    public void setToMove(boolean whiteToMove){
+        if(whiteToMove){
+            toMove = "white";
+            moveNum += 1;
+        }else{
+            toMove = "black";
+        }
+    }
 
+    public void changeToMove(){
+        if(toMove == "white"){
+            toMove = "black";
+        }else{
+            toMove = "white";
+        }
+    }
 
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        int row = e.getX()/80;
-        int col = e.getY()/80;
-        System.out.println(row + " "+ col);
-        
-        //coords.setText("+"+row);
-        for(int x = 0; x < boardTiles.size(); x++){
-            if(boardTiles.get(x).getMousePosition() != null){
-                if(firstClick){
-                    System.out.println(boardTiles.get(x).getRealPiece() != null);
-                    if(boardTiles.get(x).getRealPiece() != null){
-                        firstTile = boardTiles.get(x);
-                        piece = boardTiles.get(x).getRealPiece();
-                        System.out.println(piece.getChar());
-                        firstClick = false;
-                    }
-                }else{
-                    System.out.println("NOT FIRST CLICK");
-                    if(piece != null){
-                        System.out.println("yoyoyo");
-                        boardTiles.get(x).setPiece(piece);
-                        firstTile.setPiece(null);
-                        boardTiles.get(x).revalidate();
-                        firstTile.revalidate();
-                        piece = null;
-                        firstClick = true;
-                    }
-                    
-                }
-               
-                
-                //coords.setLocation(new Point((int)getMousePosition().getX(), (int) getMousePosition().getY()));
-               // coords.setText(""+(int)getMousePosition().getX()/80+ " "+  (int) getMousePosition().getY()/80);
-            }
+    public void makeMove(String move){
+        int firstSquare = ((move.charAt(0) - '0') * 8) + (move.charAt(1) - '0');
+        int secondSquare = ((move.charAt(2) - '0') * 8) + (move.charAt(3) - '0');
+        System.out.println(firstSquare);
+        System.out.println(secondSquare);
+        Piece firstPiece = boardTiles.get(firstSquare).getRealPiece();
+        if(firstSquare != secondSquare){
+            boardTiles.get(firstSquare).setPiece(null);
+            boardTiles.get(secondSquare).setPiece(firstPiece);
+            boardTiles.get(secondSquare).revalidate();
+            boardTiles.get(firstSquare).revalidate();
+            changeToMove();
         }
     }
     @Override
-    public void mousePressed(MouseEvent e) {
-        
+    public void mouseClicked(MouseEvent e) {
         
     }
     @Override
+    public void mousePressed(MouseEvent e) {
+        for(int x = 0; x < boardTiles.size(); x++){
+            if(boardTiles.get(x).getMousePosition() != null){
+                
+                if(firstClick){
+                    if(boardTiles.get(x).getRealPiece().getColor() == toMove){
+                        if(boardTiles.get(x).getRealPiece() != null){
+                            startingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+""+((boardTiles.get(x).getTileIndex()%8)));
+                            firstClick = false;
+                        }
+                    }
+                }else{
+                    if(moveNum == 5){
+                        
+                    }
+                    System.out.println("NOT FIRST CLICK");
+                    endingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+""+((boardTiles.get(x).getTileIndex()%8)));
+                    String move = startingSquare + endingSquare;
+                    System.out.println(move);
+                    makeMove(move);
+                    firstClick = true;
+                }
+                        
+            }
+
+        }
+    }
+        
+        
+    
+        
+        
+    
+    @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
         
     }
     @Override
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
         
     }
     @Override
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
         
     }
     @Override
@@ -156,7 +180,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     }
     @Override
     public void mouseMoved(MouseEvent e) {
-        
+
     }
     
 }

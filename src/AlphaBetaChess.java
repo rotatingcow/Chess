@@ -18,7 +18,6 @@ public class AlphaBetaChess {
         gameFrame.setResizable(false);
         gameFrame.setLayout(new BorderLayout());
 
-
        //GUI ui = new GUI();
        //gameFrame.add(ui);
        
@@ -26,8 +25,6 @@ public class AlphaBetaChess {
         BoardPanel frontBoard;
         backBoard.changeBoardFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",false);
         frontBoard = new BoardPanel(backBoard.getBoard());
-
-
         String possiblePawnMoves = backBoard.getPossibleMovesWhite("1434", true);
         System.out.println(possiblePawnMoves);
 
