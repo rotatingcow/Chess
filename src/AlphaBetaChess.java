@@ -5,13 +5,16 @@ import javax.swing.*;
 
 
 
+
 import java.awt.*;
+import java.util.ArrayList;
 
 public class AlphaBetaChess {
 
     public static void main(String[] args) {
+        
+           
 
-        //org.openjdk.jmh.Main.main(args);
         JFrame gameFrame = new JFrame("Chess");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         gameFrame.setSize(800,800);
@@ -25,7 +28,7 @@ public class AlphaBetaChess {
         BoardPanel frontBoard;
         backBoard.changeBoardFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",false);
         frontBoard = new BoardPanel(backBoard.getBoard());
-        String possiblePawnMoves = backBoard.getPossibleMovesWhite("1434", true);
+        String possiblePawnMoves = backBoard.getPossibleMovesWhite("1434", false);
         System.out.println(possiblePawnMoves);
 
 

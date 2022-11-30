@@ -8,7 +8,6 @@ import javax.swing.event.MouseInputListener;
 
 import Pieces.*;
 
-
 public class BoardPanel extends JPanel implements MouseInputListener{
     List<TilePanel> boardTiles = null;
     private boolean firstClick = true;
@@ -16,6 +15,8 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     private String startingSquare;
     private String endingSquare;
     private int moveNum;
+    private String lastMove = "8877";
+    Moves moves = new Moves();
 
     JLabel coords = new JLabel("here!");
 
@@ -26,9 +27,12 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         this.addMouseMotionListener(this);
         this.boardTiles = new ArrayList<TilePanel>();
         
+        
         for(int r = 0; r < board.length; r++){
             System.out.println();
             for(int c=0; c < board[r].length ; c++){
+                
+            
 
                 int row = r;
                 int col = c;
@@ -113,9 +117,10 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     public void makeMove(String move){
         int firstSquare = ((move.charAt(0) - '0') * 8) + (move.charAt(1) - '0');
         int secondSquare = ((move.charAt(2) - '0') * 8) + (move.charAt(3) - '0');
-        System.out.println(firstSquare);
-        System.out.println(secondSquare);
         Piece firstPiece = boardTiles.get(firstSquare).getRealPiece();
+        System.out.println(move);
+        System.out.println(lastMove);
+        System.out.println(moves.isLegal(lastMove, move));
         if(firstSquare != secondSquare){
             boardTiles.get(firstSquare).setPiece(null);
             boardTiles.get(secondSquare).setPiece(firstPiece);
@@ -123,6 +128,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
             boardTiles.get(firstSquare).revalidate();
             changeToMove();
         }
+        lastMove = move;
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -144,10 +150,8 @@ public class BoardPanel extends JPanel implements MouseInputListener{
                     if(moveNum == 5){
                         
                     }
-                    System.out.println("NOT FIRST CLICK");
                     endingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+""+((boardTiles.get(x).getTileIndex()%8)));
                     String move = startingSquare + endingSquare;
-                    System.out.println(move);
                     makeMove(move);
                     firstClick = true;
                 }

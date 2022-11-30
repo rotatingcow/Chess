@@ -21,6 +21,7 @@ public class Moves {
     static long OCCUPIED;
     static long EMPTY;
     static String tempList;
+    private static String list;
     static long RankMasks8[] =/*from rank1 to rank8*/
     {
         0xFFL, 0xFF00L, 0xFF0000L, 0xFF000000L, 0xFF00000000L, 0xFF0000000000L, 0xFF000000000000L, 0xFF00000000000000L
@@ -36,13 +37,28 @@ public class Moves {
         BLACK_PIECES=BP|BN|BB|BR|BQ;//omitted BK to avoid illegal capture
         EMPTY=~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
         timeExperiment(WP);
-        String list=possiblePW(history,WP,BP)/*+
+        list=possiblePW(history,WP,BP)/*+
                 posibleNW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
                 posibleBW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
                 posibleRW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
                 posibleQW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
                 posibleKW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)*/;
         return list;
+    }
+
+    public boolean isLegal(String lastMove, String move){
+        boolean isLegal = false;
+        String legalMoves = list;
+  
+        for(int x =0; x < legalMoves.length()-5; x++){
+
+            String currentMove = legalMoves.substring(x, x+4);
+            System.out.println(currentMove);
+            if(move == currentMove){
+                isLegal = true;
+            }
+        }
+        return isLegal;
     }
 
 
@@ -164,8 +180,6 @@ public class Moves {
                 int passantFile = history.charAt(history.length()-1) - '0';
                 //en passant right
                 possibility = (WP<<1)&BP&FileMasks8[passantFile]&~FILE_A;
-                System.out.println(passantFile);
-                System.out.println(possibility);
                 if(possibility != 0){
                     int index=Long.numberOfTrailingZeros(possibility);
                     list+=""+((index/8))+((index%8)-1)+(index/8-1)+(index%8);
@@ -183,7 +197,6 @@ public class Moves {
             }
         }
 
-        System.out.println(list);
         return(list);
     }
 
