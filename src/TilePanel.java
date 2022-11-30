@@ -59,11 +59,15 @@ public class TilePanel extends JPanel{
     public void setPiece(Piece piece){
         if(piece == null){
             this.empty = true;
+            this.piece = null;
             this.remove(piecePng);
+            repaint();
+            revalidate();
         }else{
             if(!empty){this.remove(piecePng);}
             ImageIcon firstPng = new ImageIcon(new File("images/"+piece.getName()+"_"+piece.getColor()+".png").getAbsolutePath());   
             piecePng = new JLabel(new ImageIcon(firstPng.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH)));
+            this.piece = piece;
             this.add(piecePng);
             this.empty = false;
         }

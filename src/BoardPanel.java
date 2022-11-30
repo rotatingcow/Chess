@@ -103,17 +103,25 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         for(int x = 0; x < boardTiles.size(); x++){
             if(boardTiles.get(x).getMousePosition() != null){
                 if(firstClick){
-                    firstTile = boardTiles.get(x);
-                    piece = boardTiles.get(x).getRealPiece();
-                    System.out.println(piece.getChar());
-                    firstClick = false;
+                    System.out.println(boardTiles.get(x).getRealPiece() != null);
+                    if(boardTiles.get(x).getRealPiece() != null){
+                        firstTile = boardTiles.get(x);
+                        piece = boardTiles.get(x).getRealPiece();
+                        System.out.println(piece.getChar());
+                        firstClick = false;
+                    }
                 }else{
-                    boardTiles.get(x).setPiece(piece);
-                    firstTile.setPiece(null);
-                    boardTiles.get(x).revalidate();
-                    firstTile.revalidate();
-                    piece = null;
-                    firstClick = true;
+                    System.out.println("NOT FIRST CLICK");
+                    if(piece != null){
+                        System.out.println("yoyoyo");
+                        boardTiles.get(x).setPiece(piece);
+                        firstTile.setPiece(null);
+                        boardTiles.get(x).revalidate();
+                        firstTile.revalidate();
+                        piece = null;
+                        firstClick = true;
+                    }
+                    
                 }
                
                 
