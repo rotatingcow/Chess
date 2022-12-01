@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Moves {
 
@@ -31,34 +32,64 @@ public class Moves {
         0x101010101010101L, 0x202020202020202L, 0x404040404040404L, 0x808080808080808L,
         0x1010101010101010L, 0x2020202020202020L, 0x4040404040404040L, 0x8080808080808080L
     };
+    static long DiagonalMasks8[] =/*from top left to bottom right*/
+    {
+	0x1L, 0x102L, 0x10204L, 0x1020408L, 0x102040810L, 0x10204081020L, 0x1020408102040L,
+	0x102040810204080L, 0x204081020408000L, 0x408102040800000L, 0x810204080000000L,
+	0x1020408000000000L, 0x2040800000000000L, 0x4080000000000000L, 0x8000000000000000L
+    };
+    static long AntiDiagonalMasks8[] =/*from top right to bottom left*/
+    {
+	0x80L, 0x8040L, 0x804020L, 0x80402010L, 0x8040201008L, 0x804020100804L, 0x80402010080402L,
+	0x8040201008040201L, 0x4020100804020100L, 0x2010080402010000L, 0x1008040201000000L,
+	0x804020100000000L, 0x402010000000000L, 0x201000000000000L, 0x100000000000000L
+    };
+
+    static long HorizontalAndVerticalMoves(int s)
+    {
+        long binaryS=1L<<s;
+        long possibilitiesHorizontal = (OCCUPIED - 2 * binaryS) ^ Long.reverse(Long.reverse(OCCUPIED) - 2 * Long.reverse(binaryS));
+        long possibilitiesVertical = ((OCCUPIED&FileMasks8[s % 8]) - (2 * binaryS)) ^ Long.reverse(Long.reverse(OCCUPIED&FileMasks8[s % 8]) - (2 * Long.reverse(binaryS)));
+        //drawBitboard((possibilitiesHorizontal&RankMasks8[s / 8]) | (possibilitiesVertical&FileMasks8[s % 8]));
+        return (possibilitiesHorizontal&RankMasks8[s / 8]) | (possibilitiesVertical&FileMasks8[s % 8]);
+    }
+    static long DiagAndAntiDiagMoves(int s)
+    {
+        long binaryS=1L<<s;
+        long possibilitiesDiagonal = ((OCCUPIED&DiagonalMasks8[(s / 8) + (s % 8)]) - (2 * binaryS)) ^ Long.reverse(Long.reverse(OCCUPIED&DiagonalMasks8[(s / 8) + (s % 8)]) - (2 * Long.reverse(binaryS)))&NOT_WHITE_PIECES;
+        long possibilitiesAntiDiagonal = ((OCCUPIED&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]) - (2 * binaryS)) ^ Long.reverse(Long.reverse(OCCUPIED&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]) - (2 * Long.reverse(binaryS)))&NOT_WHITE_PIECES;
+        return (possibilitiesDiagonal&DiagonalMasks8[(s / 8) + (s % 8)]) | (possibilitiesAntiDiagonal&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]);
+    }
 
     public String possibleMovesW(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK) {
         NOT_WHITE_PIECES= ~(WP|WN|WB|WR|WQ|WK|BK);//added BK to avoid illegal capture
         BLACK_PIECES=BP|BN|BB|BR|BQ;//omitted BK to avoid illegal capture
         EMPTY=~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
-        timeExperiment(WP);
-        list=possiblePW(history,WP,BP)/*+
+        OCCUPIED=WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK;
+        EMPTY=~OCCUPIED;
+        
+        //drawBitboard(DiagAndAntiDiagMoves(36));
+        //timeExperiment(WP);
+        list=//+
+            possiblePW(history,WP,BP)+
+            possibleBW(OCCUPIED,WB)+
+            possibleRW(OCCUPIED, WR)+
+            possibleQW(OCCUPIED,WQ)
+            /*+
                 posibleNW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
-                posibleBW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
-                posibleRW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
-                posibleQW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
+                
+                
+                +
                 posibleKW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)*/;
         return list;
     }
 
     public boolean isLegal(String lastMove, String move){
-        boolean isLegal = false;
+        possibleMovesW(move, NOT_WHITE_PIECES, KNIGHT_C6, KING_SIDE, KING_B7, FILE_H, FILE_GH, FILE_AB, FILE_A, EXTENDED_CENTER, EMPTY, CENTER, BLACK_PIECES);
         String legalMoves = list;
-  
-        for(int x =0; x < legalMoves.length()-5; x++){
-
-            String currentMove = legalMoves.substring(x, x+4);
-            System.out.println(currentMove);
-            if(move == currentMove){
-                isLegal = true;
-            }
-        }
+        boolean isLegal = (legalMoves.contains(move)) ? true : false;
         return isLegal;
+        
     }
 
 
@@ -91,6 +122,77 @@ public class Moves {
             finalList += syllableOne+syllableTwo + " to " + syllableThree+syllableFour+"| ";
         }
         return(finalList);
+    }
+
+    public static String possibleBW(long OCCUPIED, long WB){
+        String list="";
+        long i=WB&~(WB-1);
+        long possibility;
+        while(i != 0)
+        {
+            int iLocation=Long.numberOfTrailingZeros(i);
+            possibility=DiagAndAntiDiagMoves(iLocation)&NOT_WHITE_PIECES;
+            long j=possibility&~(possibility-1);
+            while (j != 0)
+            {
+                int index=Long.numberOfTrailingZeros(j);
+                list+=""+(iLocation/8)+(iLocation%8)+(index/8)+(index%8);
+                possibility&=~j;
+                j=possibility&~(possibility-1);
+            }
+            WB&=~i;
+            i=WB&~(WB-1);
+        }
+        int temp = list.length()/4;
+        return list;
+    }
+
+    public static String possibleRW(long OCCUPIED, long WR){
+        String list="";
+        long i=WR&~(WR-1);
+        long possibility;
+        while(i != 0)
+        {
+            int iLocation=Long.numberOfTrailingZeros(i);
+            possibility=HorizontalAndVerticalMoves(iLocation)&NOT_WHITE_PIECES;
+            long j=possibility&~(possibility-1);
+            while (j != 0)
+            {
+                int index=Long.numberOfTrailingZeros(j);
+                list+=""+(iLocation/8)+(iLocation%8)+(index/8)+(index%8);
+                possibility&=~j;
+                j=possibility&~(possibility-1);
+            }
+            WR&=~i;
+            i=WR&~(WR-1);
+        }
+        int temp = list.length()/4;
+        return list;
+    }
+
+    public static String possibleQW(long OCCUPIED, long WQ){
+        String list="";
+        long i=WQ&~(WQ-1);
+        long possibility;
+        //drawBitboard(HorizontalAndVerticalMoves(Long.numberOfTrailingZeros(i))&DiagAndAntiDiagMoves(Long.numberOfTrailingZeros(i))&NOT_WHITE_PIECES);
+        while(i != 0)
+        {
+            int iLocation=Long.numberOfTrailingZeros(i);
+            possibility=HorizontalAndVerticalMoves(iLocation) | DiagAndAntiDiagMoves(iLocation)&NOT_WHITE_PIECES;
+            long j=possibility&~(possibility-1);
+            while (j != 0)
+            {
+                int index=Long.numberOfTrailingZeros(j);
+                list+=""+(iLocation/8)+(iLocation%8)+(index/8)+(index%8);
+                possibility&=~j;
+                j=possibility&~(possibility-1);
+            }
+            WQ&=~i;
+            i=WQ&~(WQ-1);
+        }
+        
+        int temp = list.length()/4;
+        return list;
     }
 
 
@@ -206,7 +308,19 @@ public class Moves {
     }
 
 
-
+    public static void drawBitboard(long bitBoard) {
+        String chessBoard[][]=new String[8][8];
+        for (int i=0;i<64;i++) {
+            chessBoard[i/8][i%8]="";
+        }
+        for (int i=0;i<64;i++) {
+            if (((bitBoard>>>i)&1)==1) {chessBoard[i/8][i%8]="P";}
+            if ("".equals(chessBoard[i/8][i%8])) {chessBoard[i/8][i%8]=" ";}
+        }
+        for (int i=0;i<8;i++) {
+            System.out.println(Arrays.toString(chessBoard[i]));
+        }
+    }
 
 
 

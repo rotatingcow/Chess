@@ -39,6 +39,7 @@ public class Board {
     public String getPossibleMovesWhite(String history, boolean readable){
         if(!readable){
             return(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+            
         }else{
             return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK)));
         }

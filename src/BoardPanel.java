@@ -1,9 +1,11 @@
+
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
+
 
 
 import Pieces.*;
@@ -16,6 +18,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     private String endingSquare;
     private int moveNum;
     private String lastMove = "8877";
+    private Board backBoard = new Board();
     Moves moves = new Moves();
 
     JLabel coords = new JLabel("here!");
@@ -117,18 +120,17 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     public void makeMove(String move){
         int firstSquare = ((move.charAt(0) - '0') * 8) + (move.charAt(1) - '0');
         int secondSquare = ((move.charAt(2) - '0') * 8) + (move.charAt(3) - '0');
+        //backBoard.changeBoardArray(getBoardPos(), false);
         Piece firstPiece = boardTiles.get(firstSquare).getRealPiece();
-        System.out.println(move);
-        System.out.println(lastMove);
-        System.out.println(moves.isLegal(lastMove, move));
-        if(firstSquare != secondSquare){
-            boardTiles.get(firstSquare).setPiece(null);
-            boardTiles.get(secondSquare).setPiece(firstPiece);
-            boardTiles.get(secondSquare).revalidate();
-            boardTiles.get(firstSquare).revalidate();
-            changeToMove();
+        if(moves.isLegal(lastMove, move) || toMove == "black"){
+                boardTiles.get(firstSquare).setPiece(null);
+                boardTiles.get(secondSquare).setPiece(firstPiece);
+                boardTiles.get(secondSquare).revalidate();
+                boardTiles.get(firstSquare).revalidate();
+                changeToMove();
+            lastMove = move;
         }
-        lastMove = move;
+        
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -147,9 +149,6 @@ public class BoardPanel extends JPanel implements MouseInputListener{
                         }
                     }
                 }else{
-                    if(moveNum == 5){
-                        
-                    }
                     endingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+""+((boardTiles.get(x).getTileIndex()%8)));
                     String move = startingSquare + endingSquare;
                     makeMove(move);
