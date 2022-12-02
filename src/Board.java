@@ -209,7 +209,7 @@ public class Board {
         
         for(int i = 0; i < 8; i++){
             for(int s = 0; s < 8; s++){
-                //System.out.println("old board = "+ board[i][s] + "| new board = "+ newBoard[i][s]);
+    
                 board[i][s] = newBoard[i][s];
             }
         }

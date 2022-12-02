@@ -16,12 +16,23 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     private String toMove = "white";
     private String startingSquare;
     private String endingSquare;
-    private int moveNum;
     private String lastMove = "8877";
     private Board backBoard = new Board();
     Moves moves = new Moves();
 
     JLabel coords = new JLabel("here!");
+
+    public void changeBoardFen(String fen, boolean draw){
+        backBoard.changeBoardFen(fen, draw);
+    }
+
+    public void changeBoardArray(char[][] board,boolean draw){
+        backBoard.changeBoardArray(board, draw);
+    }
+
+    public String possibleMovesWhite(String history, boolean readable){
+        return(backBoard.getPossibleMovesWhite(history, readable));
+    }
 
     public BoardPanel(char[][] board){
         
@@ -80,6 +91,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         }
        
         validate();
+        backBoard.getPossibleMovesWhite("0000", false);
     }
 
     public List<TilePanel> getboardTiles(){
@@ -103,7 +115,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     public void setToMove(boolean whiteToMove){
         if(whiteToMove){
             toMove = "white";
-            moveNum += 1;
+            //moveNum += 1;
         }else{
             toMove = "black";
         }
@@ -118,15 +130,20 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     }
 
     public void makeMove(String move){
+        backBoard.getPossibleMovesWhite(move, false);
         int firstSquare = ((move.charAt(0) - '0') * 8) + (move.charAt(1) - '0');
         int secondSquare = ((move.charAt(2) - '0') * 8) + (move.charAt(3) - '0');
-        //backBoard.changeBoardArray(getBoardPos(), false);
+        backBoard.changeBoardArray(getBoardPos(), false);
         Piece firstPiece = boardTiles.get(firstSquare).getRealPiece();
-        if(moves.isLegal(lastMove, move) || toMove == "black"){
+        //moves.isLegal(lastMove, move) 
+        if( (moves.isLegal(lastMove, move)  || toMove == "black") && firstSquare != secondSquare){
                 boardTiles.get(firstSquare).setPiece(null);
                 boardTiles.get(secondSquare).setPiece(firstPiece);
                 boardTiles.get(secondSquare).revalidate();
                 boardTiles.get(firstSquare).revalidate();
+                
+                changeBoardArray(getBoardPos(), false);
+                backBoard.getPossibleMovesWhite(move, false);
                 changeToMove();
             lastMove = move;
         }

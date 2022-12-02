@@ -7,7 +7,6 @@ import javax.swing.*;
 
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class AlphaBetaChess {
 
@@ -33,17 +32,16 @@ public class AlphaBetaChess {
 
         };
 
-        
+
         BoardPanel frontBoard;
         Board backBoard = new Board();
         
-        //backBoard.changeBoardFen("8/8/8/3Q4/8/8/8/8 w - - 0 1",false);
+        //backBoard.changeBoardFen("4q3/8/8/4R3/8/8/8/8 w - - 0 1",false);
         backBoard.changeBoardArray(board, false);
         frontBoard = new BoardPanel(backBoard.getBoard());
-        String possibleMoves = backBoard.getPossibleMovesWhite("1434", true);
+        String possibleMoves = frontBoard.possibleMovesWhite("1434", true);
         System.out.println(possibleMoves);
-
-        backBoard.changeBoardArray(frontBoard.getBoardPos(),false);
+        
 
         gameFrame.add(frontBoard);
         gameFrame.pack();

@@ -3,20 +3,20 @@ import java.util.Arrays;
 public class Moves {
 
     // Correspond to areas of boards on 64 digit long binary string.
-    static long FILE_A=72340172838076673L;
-    static long FILE_H=-9187201950435737472L;
-    static long FILE_AB=217020518514230019L;
-    static long FILE_GH=-4557430888798830400L;
-    static long RANK_1=-72057594037927936L;
-    static long RANK_4=1095216660480L;
-    static long RANK_5=4278190080L;
-    static long RANK_8=255L;
-    static long CENTER=103481868288L;
-    static long EXTENDED_CENTER=66229406269440L;
-    static long KING_SIDE=-1085102592571150096L;
-    static long QUEEN_SIDE=1085102592571150095L;
-    static long KING_B7=460039L;
-    static long KNIGHT_C6=43234889994L;
+    static final long FILE_A=72340172838076673L;
+    static final long FILE_H=-9187201950435737472L;
+    static final  long FILE_AB=217020518514230019L;
+    static final  long FILE_GH=-4557430888798830400L;
+    static final  long RANK_1=-72057594037927936L;
+    static final  long RANK_4=1095216660480L;
+    static final  long RANK_5=4278190080L;
+    static final  long RANK_8=255L;
+    static final  long CENTER=103481868288L;
+    static final  long EXTENDED_CENTER=66229406269440L;
+    static final  long KING_SIDE=-1085102592571150096L;
+    static final  long QUEEN_SIDE=1085102592571150095L;
+    static final  long KING_RANGE=460039L;
+    static final  long KNIGHT_RANGE=43234889994L;
     static long NOT_WHITE_PIECES;
     static long BLACK_PIECES;
     static long OCCUPIED;
@@ -71,29 +71,27 @@ public class Moves {
         //drawBitboard(DiagAndAntiDiagMoves(36));
         //timeExperiment(WP);
         list=//+
+            possibleNW(OCCUPIED,WN)+
             possiblePW(history,WP,BP)+
             possibleBW(OCCUPIED,WB)+
             possibleRW(OCCUPIED, WR)+
-            possibleQW(OCCUPIED,WQ)
-            /*+
-                posibleNW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)+
-                
-                
-                +
-                posibleKW(WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK)*/;
+            possibleQW(OCCUPIED,WQ)+
+            possibleKW(OCCUPIED, WK);
+
+        unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
         return list;
     }
 
+    
+
     public boolean isLegal(String lastMove, String move){
-        possibleMovesW(move, NOT_WHITE_PIECES, KNIGHT_C6, KING_SIDE, KING_B7, FILE_H, FILE_GH, FILE_AB, FILE_A, EXTENDED_CENTER, EMPTY, CENTER, BLACK_PIECES);
+        //possibleMovesW(move, NOT_WHITE_PIECES, KNIGHT_C6, KING_SIDE, KING_B7, FILE_H, FILE_GH, FILE_AB, FILE_A, EXTENDED_CENTER, EMPTY, CENTER, BLACK_PIECES);
         String legalMoves = list;
+        System.out.println(getPossibleMovesReadable(legalMoves));
         boolean isLegal = (legalMoves.contains(move)) ? true : false;
         return isLegal;
         
     }
-
-
-
 
     public String getPossibleMovesReadable(String possibleMoves){
         String stringMoves = possibleMoves + " ";
@@ -124,6 +122,42 @@ public class Moves {
         return(finalList);
     }
 
+    public static String possibleNW(long OCCUPIED,long WN)
+    {
+        String list="";
+        long i=WN&~(WN-1);
+        long possibility;
+        while(i != 0)
+        {
+            int iLocation=Long.numberOfTrailingZeros(i);
+            if (iLocation>18)
+            {
+                possibility=KNIGHT_RANGE<<(iLocation-18);
+            }
+            else {
+                possibility=KNIGHT_RANGE>>(18-iLocation);
+            }
+            if (iLocation%8<4)
+            {
+                possibility &=~FILE_GH&NOT_WHITE_PIECES;
+            }
+            else {
+                possibility &=~FILE_AB&NOT_WHITE_PIECES;
+            }
+            long j=possibility&~(possibility-1);
+            while (j != 0)
+            {
+                int index=Long.numberOfTrailingZeros(j);
+                list+=""+(iLocation/8)+(iLocation%8)+(index/8)+(index%8);
+                possibility&=~j;
+                j=possibility&~(possibility-1);
+            }
+            WN&=~i;
+            i=WN&~(WN-1);
+        }
+        return list;
+    }
+
     public static String possibleBW(long OCCUPIED, long WB){
         String list="";
         long i=WB&~(WB-1);
@@ -143,7 +177,7 @@ public class Moves {
             WB&=~i;
             i=WB&~(WB-1);
         }
-        int temp = list.length()/4;
+
         return list;
     }
 
@@ -166,7 +200,7 @@ public class Moves {
             WR&=~i;
             i=WR&~(WR-1);
         }
-        int temp = list.length()/4;
+
         return list;
     }
 
@@ -178,7 +212,7 @@ public class Moves {
         while(i != 0)
         {
             int iLocation=Long.numberOfTrailingZeros(i);
-            possibility=HorizontalAndVerticalMoves(iLocation) | DiagAndAntiDiagMoves(iLocation)&NOT_WHITE_PIECES;
+            possibility=(HorizontalAndVerticalMoves(iLocation) | DiagAndAntiDiagMoves(iLocation))&NOT_WHITE_PIECES;
             long j=possibility&~(possibility-1);
             while (j != 0)
             {
@@ -191,13 +225,9 @@ public class Moves {
             i=WQ&~(WQ-1);
         }
         
-        int temp = list.length()/4;
         return list;
     }
 
-
-
-    
     public static String possiblePW(String history, long WP, long BP){
         String list = "";
         //Capture Right
@@ -302,10 +332,120 @@ public class Moves {
         return(list);
     }
 
-    public static String possibleBW(){
-        String list ="";
-        return(list);
+    public static String possibleKW(long OCCUPIED, long WK){
+    /*
+     00000000
+     00000000
+     00000000
+     00000000
+     00000000
+     00000111
+     00000101
+     00000111
+     */
+    String list="";
+        long possibility;
+        int iLocation=Long.numberOfTrailingZeros(WK);
+        if (iLocation>9)
+        {
+            possibility=KING_RANGE<<(iLocation-9);
+        }
+        else {
+            possibility=KING_RANGE>>(9-iLocation);
+        }
+        if (iLocation%8<4)
+        {
+            possibility &=~FILE_GH&NOT_WHITE_PIECES;
+        }
+        else {
+            possibility &=~FILE_AB&NOT_WHITE_PIECES;
+        }
+        long j=possibility&~(possibility-1);
+        while (j != 0)
+        {
+            int index=Long.numberOfTrailingZeros(j);
+            list+=""+(iLocation/8)+(iLocation%8)+(index/8)+(index%8);
+            possibility&=~j;
+            j=possibility&~(possibility-1);
+        }
+        return list;
     }
+
+    public static long unsafeForBlack(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK)
+    {
+        long unsafe;
+        OCCUPIED=WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK;
+        //pawn
+        unsafe=((WP>>>7)&~FILE_A);//pawn capture right
+        unsafe|=((WP>>>9)&~FILE_H);//pawn capture left
+        long possibility;
+        //knight
+        long i=WN&~(WN-1);
+        while(i != 0)
+        {
+            int iLocation=Long.numberOfTrailingZeros(i);
+            if (iLocation>18)
+            {
+                possibility=KNIGHT_RANGE<<(iLocation-18);
+            }
+            else {
+                possibility=KNIGHT_RANGE>>(18-iLocation);
+            }
+            if (iLocation%8<4)
+            {
+                possibility &=~FILE_GH;
+            }
+            else {
+                possibility &=~FILE_AB;
+            }
+            unsafe |= possibility;
+            WN&=~i;
+            i=WN&~(WN-1);
+        }
+        //bishop/queen
+        long QB=WQ|WB;
+        i=QB&~(QB-1);
+        while(i != 0)
+        {
+            int iLocation=Long.numberOfTrailingZeros(i);
+            possibility=DiagAndAntiDiagMoves(iLocation);
+            unsafe |= possibility;
+            QB&=~i;
+            i=QB&~(QB-1);
+        }
+        //rook/queen
+        long QR=WQ|WR;
+        i=QR&~(QR-1);
+        while(i != 0)
+        {
+            int iLocation=Long.numberOfTrailingZeros(i);
+            possibility=HorizontalAndVerticalMoves(iLocation);
+            unsafe |= possibility;
+            QR&=~i;
+            i=QR&~(QR-1);
+        }
+        //king
+        int iLocation=Long.numberOfTrailingZeros(WK);
+        if (iLocation>9)
+        {
+            possibility=KING_RANGE<<(iLocation-9);
+        }
+        else {
+            possibility=KING_RANGE>>(9-iLocation);
+        }
+        if (iLocation%8<4)
+        {
+            possibility &=~FILE_GH;
+        }
+        else {
+            possibility &=~FILE_AB;
+        }
+        unsafe |= possibility;
+        System.out.println();
+        drawBitboard(unsafe);
+        return unsafe;
+    }
+
 
 
     public static void drawBitboard(long bitBoard) {
@@ -323,7 +463,7 @@ public class Moves {
     }
 
 
-
+    /* 
     
     public static void timeExperiment(long WP) {
         int loopLength=1000;
@@ -366,5 +506,7 @@ public class Moves {
             }
         }
     }
+
+    */
     
 }
