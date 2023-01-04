@@ -88,7 +88,7 @@ public class Moves {
         //possibleMovesW(move, NOT_WHITE_PIECES, KNIGHT_C6, KING_SIDE, KING_B7, FILE_H, FILE_GH, FILE_AB, FILE_A, EXTENDED_CENTER, EMPTY, CENTER, BLACK_PIECES);
         String legalMoves = list;
         System.out.println(getPossibleMovesReadable(legalMoves));
-        boolean isLegal = (legalMoves.contains(move)) ? true : false;
+        boolean isLegal = legalMoves.contains(move);
         return isLegal;
         
     }
@@ -132,19 +132,19 @@ public class Moves {
             int iLocation=Long.numberOfTrailingZeros(i);
             if (iLocation>18)
             {
-                possibility=KNIGHT_RANGE<<(iLocation-18);
+                possibility= KNIGHT_RANGE << (iLocation-18);
             }
             else {
-                possibility=KNIGHT_RANGE>>(18-iLocation);
+                possibility= KNIGHT_RANGE >> (18-iLocation);
             }
             if (iLocation%8<4)
             {
-                possibility &=~FILE_GH&NOT_WHITE_PIECES;
+                possibility &= ~FILE_GH & NOT_WHITE_PIECES;
             }
             else {
-                possibility &=~FILE_AB&NOT_WHITE_PIECES;
+                possibility &= ~FILE_AB & NOT_WHITE_PIECES;
             }
-            long j=possibility&~(possibility-1);
+            long j= possibility&~(possibility-1);
             while (j != 0)
             {
                 int index=Long.numberOfTrailingZeros(j);
@@ -371,6 +371,7 @@ public class Moves {
         return list;
     }
 
+    //TODO fix the a1 and b1 threatening glitch
     public static long unsafeForBlack(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK)
     {
         long unsafe;

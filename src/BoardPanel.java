@@ -130,7 +130,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     }
 
     public void makeMove(String move){
-        backBoard.getPossibleMovesWhite(move, false);
+        backBoard.getPossibleMovesWhite(move, true);
         int firstSquare = ((move.charAt(0) - '0') * 8) + (move.charAt(1) - '0');
         int secondSquare = ((move.charAt(2) - '0') * 8) + (move.charAt(3) - '0');
         backBoard.changeBoardArray(getBoardPos(), false);
@@ -143,7 +143,7 @@ public class BoardPanel extends JPanel implements MouseInputListener{
                 boardTiles.get(firstSquare).revalidate();
                 
                 changeBoardArray(getBoardPos(), false);
-                backBoard.getPossibleMovesWhite(move, false);
+                System.out.println(backBoard.getPossibleMovesWhite(move, true));    
                 changeToMove();
             lastMove = move;
         }
@@ -157,7 +157,6 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     public void mousePressed(MouseEvent e) {
         for(int x = 0; x < boardTiles.size(); x++){
             if(boardTiles.get(x).getMousePosition() != null){
-                
                 if(firstClick){
                     if(boardTiles.get(x).getRealPiece().getColor() == toMove){
                         if(boardTiles.get(x).getRealPiece() != null){

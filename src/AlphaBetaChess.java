@@ -36,11 +36,10 @@ public class AlphaBetaChess {
         BoardPanel frontBoard;
         Board backBoard = new Board();
         
-        //backBoard.changeBoardFen("4q3/8/8/4R3/8/8/8/8 w - - 0 1",false);
-        backBoard.changeBoardArray(board, false);
+        backBoard.changeBoardFen("8/3q4/8/8/8/8/5P2/8 w - - 0 1",false);
+        //backBoard.changeBoardArray(board, false);
         frontBoard = new BoardPanel(backBoard.getBoard());
         String possibleMoves = frontBoard.possibleMovesWhite("1434", true);
-        System.out.println(possibleMoves);
         
 
         gameFrame.add(frontBoard);
