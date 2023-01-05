@@ -17,6 +17,8 @@ public class AlphaBetaChess {
         gameFrame.setResizable(false);
         gameFrame.setLayout(new BorderLayout());
 
+        System.out.println("branch :black-movement");
+
        //GUI ui = new GUI();
        //gameFrame.add(ui);
         char[][] board = {
