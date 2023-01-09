@@ -30,8 +30,8 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         backBoard.changeBoardArray(board, draw);
     }
 
-    public String possibleMovesWhite(String history, boolean readable){
-        return(backBoard.getPossibleMovesWhite(history, readable));
+    public String possibleMoves(String history, boolean readable, boolean isWhite){
+        return(backBoard.getPossibleMoves(history, readable, isWhite));
     }
 
     public BoardPanel(char[][] board){
@@ -91,7 +91,6 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         }
        
         validate();
-        backBoard.getPossibleMovesWhite("0000", false);
     }
 
     public List<TilePanel> getboardTiles(){
@@ -130,20 +129,31 @@ public class BoardPanel extends JPanel implements MouseInputListener{
     }
 
     public void makeMove(String move){
-        backBoard.getPossibleMovesWhite(move, true);
+        System.out.println("run makeMove in BoardPanel");
+        if(toMove== "black"){
+            possibleMoves(move,false,false);
+        }else{
+            possibleMoves(move,false,true);
+        }
+        
         int firstSquare = ((move.charAt(0) - '0') * 8) + (move.charAt(1) - '0');
         int secondSquare = ((move.charAt(2) - '0') * 8) + (move.charAt(3) - '0');
         backBoard.changeBoardArray(getBoardPos(), false);
         Piece firstPiece = boardTiles.get(firstSquare).getRealPiece();
         //moves.isLegal(lastMove, move) 
-        if( (moves.isLegal(lastMove, move)  || toMove == "black") && firstSquare != secondSquare){
+        if( moves.isLegal(lastMove, move) && firstSquare != secondSquare){
+                System.out.println("legal move made");
                 boardTiles.get(firstSquare).setPiece(null);
                 boardTiles.get(secondSquare).setPiece(firstPiece);
                 boardTiles.get(secondSquare).revalidate();
                 boardTiles.get(firstSquare).revalidate();
                 
                 changeBoardArray(getBoardPos(), false);
-                System.out.println(backBoard.getPossibleMovesWhite(move, true));    
+                if(toMove == "white"){
+                    System.out.println(possibleMoves(move, true, true));  
+                }else{
+                    System.out.println(possibleMoves(move, true, false));
+                }
                 changeToMove();
             lastMove = move;
         }
@@ -158,10 +168,12 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         for(int x = 0; x < boardTiles.size(); x++){
             if(boardTiles.get(x).getMousePosition() != null){
                 if(firstClick){
-                    if(boardTiles.get(x).getRealPiece().getColor() == toMove){
-                        if(boardTiles.get(x).getRealPiece() != null){
+                    if(boardTiles.get(x).getRealPiece() != null){
+                        if(boardTiles.get(x).getRealPiece().getColor() == toMove){
+                            
                             startingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+""+((boardTiles.get(x).getTileIndex()%8)));
                             firstClick = false;
+                            
                         }
                     }
                 }else{

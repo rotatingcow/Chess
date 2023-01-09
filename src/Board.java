@@ -36,12 +36,23 @@ public class Board {
     }
 
 
-    public String getPossibleMovesWhite(String history, boolean readable){
+    public String getPossibleMoves(String history, boolean readable, boolean isWhite){
+        System.out.println("run getPossible moves, no conditions");
         if(!readable){
-            return(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
-            
+            if(isWhite){
+                System.out.println("run getPossibleMoves, isWhite == true in Board");
+                return(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+            }else{
+                System.out.println("run getPossibleMoves, isWhite == false in Board");
+                return(moveFinder.possibleMovesB(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+            }
         }else{
-            return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK)));
+            if(isWhite){
+                return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK)));
+            }else{
+                return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesB(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK)));
+            }
+            
         }
     }
         
@@ -254,16 +265,6 @@ public class Board {
         else{
             arrayToBitBoard(board);
         }
-    }
-    
-
-
-
-
-
-
-    public void addPiece(int col, int rank, Piece piece){
-
     }
     
 }

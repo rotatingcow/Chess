@@ -5,20 +5,22 @@ public class Moves {
     // Correspond to areas of boards on 64 digit long binary string.
     static final long FILE_A=72340172838076673L;
     static final long FILE_H=-9187201950435737472L;
-    static final  long FILE_AB=217020518514230019L;
-    static final  long FILE_GH=-4557430888798830400L;
-    static final  long RANK_1=-72057594037927936L;
-    static final  long RANK_4=1095216660480L;
-    static final  long RANK_5=4278190080L;
-    static final  long RANK_8=255L;
-    static final  long CENTER=103481868288L;
-    static final  long EXTENDED_CENTER=66229406269440L;
-    static final  long KING_SIDE=-1085102592571150096L;
-    static final  long QUEEN_SIDE=1085102592571150095L;
-    static final  long KING_RANGE=460039L;
-    static final  long KNIGHT_RANGE=43234889994L;
+    static final long FILE_AB=217020518514230019L;
+    static final long FILE_GH=-4557430888798830400L;
+    static final long RANK_1=-72057594037927936L;
+    static final long RANK_4=1095216660480L;
+    static final long RANK_5=4278190080L;
+    static final long RANK_8=255L;
+    static final long CENTER=103481868288L;
+    static final long EXTENDED_CENTER=66229406269440L;
+    static final long KING_SIDE=-1085102592571150096L;
+    static final long QUEEN_SIDE=1085102592571150095L;
+    static final long KING_RANGE=460039L;
+    static final long KNIGHT_RANGE=43234889994L;
     static long NOT_WHITE_PIECES;
     static long BLACK_PIECES;
+    static long WHITE_PIECES;
+    static long NOT_BLACK_PIECES;
     static long OCCUPIED;
     static long EMPTY;
     static String tempList;
@@ -62,8 +64,11 @@ public class Moves {
     }
 
     public String possibleMovesW(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK) {
+        System.out.println("run possibleMovesW in moves");
         NOT_WHITE_PIECES= ~(WP|WN|WB|WR|WQ|WK|BK);//added BK to avoid illegal capture
         BLACK_PIECES=BP|BN|BB|BR|BQ;//omitted BK to avoid illegal capture
+        WHITE_PIECES = WP|WN|WB|WR|WQ;//omitted WK to ovaid illegal capture
+        NOT_BLACK_PIECES = ~(BP|BN|BB|BR|BQ|WK);
         EMPTY=~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
         OCCUPIED=WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK;
         EMPTY=~OCCUPIED;
@@ -71,24 +76,42 @@ public class Moves {
         //drawBitboard(DiagAndAntiDiagMoves(36));
         //timeExperiment(WP);
         list=//+
-            possibleNW(OCCUPIED,WN)+
+            possibleN(OCCUPIED,WN,true)+
             possiblePW(history,WP,BP)+
-            possibleBW(OCCUPIED,WB)+
-            possibleRW(OCCUPIED, WR)+
-            possibleQW(OCCUPIED,WQ)+
-            possibleKW(OCCUPIED, WK);
-
+            possibleB(OCCUPIED,WB, true)+
+            possibleR(OCCUPIED, WR, true)+
+            possibleQ(OCCUPIED,WQ,true)+
+            possibleK(OCCUPIED, WK, true);
         unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
         return list;
     }
+    
+    public String possibleMovesB(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
+        System.out.println("run possibleMovesB in Moves");
+        NOT_WHITE_PIECES= ~(WP|WN|WB|WR|WQ|WK|BK);//added BK to avoid illegal capture
+        BLACK_PIECES=BP|BN|BB|BR|BQ;//omitted BK to avoid illegal capture
+        WHITE_PIECES = WP|WN|WB|WR|WQ;//omitted WK to ovaid illegal capture
+        NOT_BLACK_PIECES = ~(BP|BN|BB|BR|BQ|WK);
+        EMPTY=~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
+        OCCUPIED=WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK;
+        EMPTY=~OCCUPIED;
 
+        list = possibleN(OCCUPIED,BN,false)+
+        possibleB(OCCUPIED,BB, false)+
+        possibleR(OCCUPIED, BR,false)+
+        possibleQ(OCCUPIED,BQ,false)+
+        possibleK(OCCUPIED, BK, false);
+        return list;
+    }
     
 
     public boolean isLegal(String lastMove, String move){
         //possibleMovesW(move, NOT_WHITE_PIECES, KNIGHT_C6, KING_SIDE, KING_B7, FILE_H, FILE_GH, FILE_AB, FILE_A, EXTENDED_CENTER, EMPTY, CENTER, BLACK_PIECES);
+
         String legalMoves = list;
         System.out.println(getPossibleMovesReadable(legalMoves));
         boolean isLegal = legalMoves.contains(move);
+        System.out.println("isLegal == "+ isLegal);
         return isLegal;
         
     }
@@ -122,11 +145,12 @@ public class Moves {
         return(finalList);
     }
 
-    public static String possibleNW(long OCCUPIED,long WN)
+    public static String possibleN(long OCCUPIED,long N, boolean isWhite)
     {
         String list="";
-        long i=WN&~(WN-1);
+        long i=N&~(N-1);
         long possibility;
+        long notPieces = (isWhite)? NOT_WHITE_PIECES : NOT_BLACK_PIECES;
         while(i != 0)
         {
             int iLocation=Long.numberOfTrailingZeros(i);
@@ -139,10 +163,10 @@ public class Moves {
             }
             if (iLocation%8<4)
             {
-                possibility &= ~FILE_GH & NOT_WHITE_PIECES;
+                possibility &= ~FILE_GH & notPieces;
             }
             else {
-                possibility &= ~FILE_AB & NOT_WHITE_PIECES;
+                possibility &= ~FILE_AB & notPieces;
             }
             long j= possibility&~(possibility-1);
             while (j != 0)
@@ -152,20 +176,21 @@ public class Moves {
                 possibility&=~j;
                 j=possibility&~(possibility-1);
             }
-            WN&=~i;
-            i=WN&~(WN-1);
+            N&=~i;
+            i=N&~(N-1);
         }
         return list;
     }
 
-    public static String possibleBW(long OCCUPIED, long WB){
+    public static String possibleB(long OCCUPIED, long B, boolean isWhite){
         String list="";
-        long i=WB&~(WB-1);
+        long i=B&~(B-1);
         long possibility;
+        long notPieces = (isWhite)? NOT_WHITE_PIECES : NOT_BLACK_PIECES;
         while(i != 0)
         {
             int iLocation=Long.numberOfTrailingZeros(i);
-            possibility=DiagAndAntiDiagMoves(iLocation)&NOT_WHITE_PIECES;
+            possibility=DiagAndAntiDiagMoves(iLocation)&notPieces;
             long j=possibility&~(possibility-1);
             while (j != 0)
             {
@@ -174,21 +199,22 @@ public class Moves {
                 possibility&=~j;
                 j=possibility&~(possibility-1);
             }
-            WB&=~i;
-            i=WB&~(WB-1);
+            B&=~i;
+            i=B&~(B-1);
         }
 
         return list;
     }
 
-    public static String possibleRW(long OCCUPIED, long WR){
+    public static String possibleR(long OCCUPIED, long R, boolean isWhite){
         String list="";
-        long i=WR&~(WR-1);
+        long i=R&~(R-1);
         long possibility;
+        long notPieces = (isWhite)? NOT_WHITE_PIECES:NOT_BLACK_PIECES;
         while(i != 0)
         {
             int iLocation=Long.numberOfTrailingZeros(i);
-            possibility=HorizontalAndVerticalMoves(iLocation)&NOT_WHITE_PIECES;
+            possibility=HorizontalAndVerticalMoves(iLocation)&notPieces;
             long j=possibility&~(possibility-1);
             while (j != 0)
             {
@@ -197,22 +223,23 @@ public class Moves {
                 possibility&=~j;
                 j=possibility&~(possibility-1);
             }
-            WR&=~i;
-            i=WR&~(WR-1);
+            R&=~i;
+            i=R&~(R-1);
         }
 
         return list;
     }
 
-    public static String possibleQW(long OCCUPIED, long WQ){
+    public static String possibleQ(long OCCUPIED, long Q, boolean isWhite){
         String list="";
-        long i=WQ&~(WQ-1);
+        long i=Q&~(Q-1);
         long possibility;
+        long notPieces = (isWhite)? NOT_WHITE_PIECES : NOT_BLACK_PIECES;
         //drawBitboard(HorizontalAndVerticalMoves(Long.numberOfTrailingZeros(i))&DiagAndAntiDiagMoves(Long.numberOfTrailingZeros(i))&NOT_WHITE_PIECES);
         while(i != 0)
         {
             int iLocation=Long.numberOfTrailingZeros(i);
-            possibility=(HorizontalAndVerticalMoves(iLocation) | DiagAndAntiDiagMoves(iLocation))&NOT_WHITE_PIECES;
+            possibility=(HorizontalAndVerticalMoves(iLocation) | DiagAndAntiDiagMoves(iLocation))&notPieces;
             long j=possibility&~(possibility-1);
             while (j != 0)
             {
@@ -221,11 +248,113 @@ public class Moves {
                 possibility&=~j;
                 j=possibility&~(possibility-1);
             }
-            WQ&=~i;
-            i=WQ&~(WQ-1);
+            Q&=~i;
+            i=Q&~(Q-1);
         }
         
         return list;
+    }
+
+    public static String possiblePB(String history, long WP, long BP){
+        String list = "";
+        //Capture Right
+
+        //PawnMoves is the White Pawn bitboard, but shifted, and checked to meet certain parameters. 
+        long PawnMoves=(WP<<9)& WHITE_PIECES& ~RANK_8& ~FILE_A;//capture right
+        long possibility= PawnMoves&~(PawnMoves-1);
+
+        //While loops snap to each piece in the bitboard.
+        while (possibility != 0){
+            int index=Long.numberOfTrailingZeros(possibility);
+            list+=""+((index/8)-1)+((index%8)-1)+(index/8)+(index%8);
+            PawnMoves&=~(possibility);
+            possibility=PawnMoves&~(PawnMoves-1);
+        }
+
+        //Capture Left
+        PawnMoves = (WP<<7) & WHITE_PIECES & ~FILE_A & ~RANK_8;
+        possibility= PawnMoves&~(PawnMoves-1);
+        while (possibility != 0){
+            int index=Long.numberOfTrailingZeros(possibility);
+            list+=""+((index/8)-1)+((index%8)+1)+(index/8)+(index%8);
+            PawnMoves&=~(possibility);
+            possibility=PawnMoves&~(PawnMoves-1);
+        }
+        
+        //Move Up 1
+        PawnMoves = (WP>>8) & EMPTY & ~RANK_8;
+        possibility= PawnMoves&~(PawnMoves-1);
+        while (possibility != 0){
+            int index=Long.numberOfTrailingZeros(possibility);
+            
+            list+=""+((index/8)-1)+((index%8))+(index/8)+(index%8);
+            PawnMoves&=~(possibility);
+            possibility=PawnMoves&~(PawnMoves-1);
+        }
+
+        //Move Up 2
+        PawnMoves = (WP>>16) & EMPTY & (EMPTY>>8) & RANK_4;
+        possibility= PawnMoves&~(PawnMoves-1);
+        while (possibility != 0){
+            int index=Long.numberOfTrailingZeros(possibility);
+             
+            list+=""+((index/8)-2)+((index%8))+(index/8)+(index%8);
+            PawnMoves&=~(possibility);
+            possibility=PawnMoves&~(PawnMoves-1);
+        }
+        //TODO integrate while loop method into promotion logic.
+
+        //Capture right promote
+        PawnMoves = (WP >> 7) & BLACK_PIECES & ~FILE_H & RANK_8;
+        for(int i = Long.numberOfTrailingZeros(PawnMoves); i < Long.numberOfLeadingZeros(PawnMoves); i++){
+            if((PawnMoves>>i&1 ) == 1) {
+                list+=""+(i/8+1)+((i%8)+1)+"QP"+(i%8-1)+(i%8)+"RP"+(i%8-1)+(i%8)+"BP"+(i%8-1)+(i%8)+"NP";
+            }
+        }
+        //Capture left promote
+        PawnMoves = (WP >> 9 ) & BLACK_PIECES & ~FILE_A & RANK_8;
+        for(int i = Long.numberOfTrailingZeros(PawnMoves); i < Long.numberOfLeadingZeros(PawnMoves); i++){
+            if((PawnMoves>>i&1) == 1){
+                list += ""+((i/8)+1)+((i%8)-1)+"QP"+(i%8+1)+(i%8)+"RP"+(i%8+1)+(i%8)+"BP"+(i%8+1)+(i%8)+"NP";
+            }
+        }
+        //Move Up Promote
+        PawnMoves = (WP>>8) & EMPTY & RANK_8;
+        for(int i = Long.numberOfTrailingZeros(PawnMoves); i < Long.numberOfLeadingZeros(PawnMoves); i++){
+            if((PawnMoves>>i&1) == 1){
+                list += ""+(i/8+1)+(i%8)+"QP"+(i%8)+(i%8)+"RP"+(i%8)+(i%8)+"BP"+(i%8)+(i%8)+"NP";
+            }
+        }
+    
+        //En Passants
+        if(history.length() >= 4 ){//ie: 6545
+
+            boolean sameFile = history.charAt(history.length()-3) == history.charAt(history.length()-1);
+            boolean movedUpTwo = Math.abs((history.charAt(history.length()-2) - '0') - (history.charAt(history.length()-4) - '0')) == 2;
+
+            if(sameFile && movedUpTwo){
+
+                int passantFile = history.charAt(history.length()-1) - '0';
+                //en passant right
+                possibility = (WP<<1)&BP&FileMasks8[passantFile]&~FILE_A;
+                if(possibility != 0){
+                    int index=Long.numberOfTrailingZeros(possibility);
+                    list+=""+((index/8))+((index%8)-1)+(index/8+1)+(index%8);
+                }
+
+
+                //en passant left
+                possibility = (WP>>1)&BP&FileMasks8[passantFile]&~FILE_H;
+                System.out.println(possibility);
+                if(possibility != 0){
+                    int index=Long.numberOfTrailingZeros(possibility);
+                    list+=""+((index/8))+((index%8)+1)+((index/8)+1)+(index%8);
+                }
+
+            }
+        }
+
+        return(list);
     }
 
     public static String possiblePW(String history, long WP, long BP){
@@ -234,7 +363,6 @@ public class Moves {
 
         //PawnMoves is the White Pawn bitboard, but shifted, and checked to meet certain parameters. 
         long PawnMoves=(WP>>7)& BLACK_PIECES& ~RANK_8& ~FILE_A;//capture right
-        
         long possibility= PawnMoves&~(PawnMoves-1);
 
         //While loops snap to each piece in the bitboard.
@@ -332,7 +460,7 @@ public class Moves {
         return(list);
     }
 
-    public static String possibleKW(long OCCUPIED, long WK){
+    public static String possibleK(long OCCUPIED, long K, boolean isWhite){
     /*
      00000000
      00000000
@@ -343,9 +471,10 @@ public class Moves {
      00000101
      00000111
      */
+    long notPieces = (isWhite)? NOT_WHITE_PIECES: NOT_BLACK_PIECES;
     String list="";
         long possibility;
-        int iLocation=Long.numberOfTrailingZeros(WK);
+        int iLocation=Long.numberOfTrailingZeros(K);
         if (iLocation>9)
         {
             possibility=KING_RANGE<<(iLocation-9);
@@ -355,10 +484,10 @@ public class Moves {
         }
         if (iLocation%8<4)
         {
-            possibility &=~FILE_GH&NOT_WHITE_PIECES;
+            possibility &=~FILE_GH&notPieces;
         }
         else {
-            possibility &=~FILE_AB&NOT_WHITE_PIECES;
+            possibility &=~FILE_AB&notPieces;
         }
         long j=possibility&~(possibility-1);
         while (j != 0)
@@ -371,7 +500,6 @@ public class Moves {
         return list;
     }
 
-    //TODO fix the a1 and b1 threatening glitch
     public static long unsafeForBlack(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK)
     {
         long unsafe;
@@ -400,6 +528,7 @@ public class Moves {
                 possibility &=~FILE_AB;
             }
             unsafe |= possibility;
+            
             WN&=~i;
             i=WN&~(WN-1);
         }
@@ -425,8 +554,10 @@ public class Moves {
             QR&=~i;
             i=QR&~(QR-1);
         }
+       
         //king
         int iLocation=Long.numberOfTrailingZeros(WK);
+        System.out.println("king trails = "+iLocation) ;
         if (iLocation>9)
         {
             possibility=KING_RANGE<<(iLocation-9);
@@ -442,12 +573,8 @@ public class Moves {
             possibility &=~FILE_AB;
         }
         unsafe |= possibility;
-        System.out.println();
-        drawBitboard(unsafe);
         return unsafe;
     }
-
-
 
     public static void drawBitboard(long bitBoard) {
         String chessBoard[][]=new String[8][8];
@@ -464,50 +591,5 @@ public class Moves {
     }
 
 
-    /* 
-    
-    public static void timeExperiment(long WP) {
-        int loopLength=1000;
-        long startTime=System.currentTimeMillis();
-        System.out.println(startTime);
-        tEMethodA(loopLength, WP);
-        long endTime=System.currentTimeMillis();
-        System.out.println(endTime);
-        System.out.println("That took "+(endTime-startTime)+" milliseconds for the first method");
-        startTime=System.currentTimeMillis();
-        tEMethodB(loopLength, WP);
-        endTime=System.currentTimeMillis();
-        System.out.println("That took "+(endTime-startTime)+" milliseconds for the second method");
-    }
-
-    public static void tEMethodA(int loopLength, long WP) {
-        for (int loop=0;loop<loopLength;loop++){}
-    {
-            long PAWN_MOVES=(WP>>7)&BLACK_PIECES&~RANK_8&~FILE_A;//capture right
-            String list="";
-            for (int i=0;i<64;i++) {
-                if (((PAWN_MOVES>>i)&1)==1) {
-                    list+=""+(i/8+1)+(i%8-1)+(i/8)+(i%8);
-                }
-            }
-        }
-    }
-    public static void tEMethodB(int loopLength, long WP) {
-        for (int loop=0;loop<loopLength;loop++)
-        {
-            long PawnMoves=(WP>>7)&BLACK_PIECES&~RANK_8&~FILE_A;//capture right
-            String list="";
-            long possibility= PawnMoves&~(PawnMoves-1);
-            while (possibility != 0)
-            {
-                int index=Long.numberOfTrailingZeros(possibility);
-                list+=""+(index/8+1)+(index%8-1)+(index/8)+(index%8);
-                PawnMoves&=~(possibility);
-                possibility=PawnMoves&~(PawnMoves-1);
-            }
-        }
-    }
-
-    */
     
 }
