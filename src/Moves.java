@@ -17,6 +17,7 @@ public class Moves {
     static final long QUEEN_SIDE=1085102592571150095L;
     static final long KING_RANGE=460039L;
     static final long KNIGHT_RANGE=43234889994L;
+
     static long NOT_WHITE_PIECES;
     static long BLACK_PIECES;
     static long WHITE_PIECES;
@@ -25,6 +26,7 @@ public class Moves {
     static long EMPTY;
     static String tempList;
     private static String list;
+
     static long RankMasks8[] =/*from rank1 to rank8*/
     {
         0xFFL, 0xFF00L, 0xFF0000L, 0xFF000000L, 0xFF00000000L, 0xFF0000000000L, 0xFF000000000000L, 0xFF00000000000000L
@@ -52,7 +54,6 @@ public class Moves {
         long binaryS=1L<<s;
         long possibilitiesHorizontal = (OCCUPIED - 2 * binaryS) ^ Long.reverse(Long.reverse(OCCUPIED) - 2 * Long.reverse(binaryS));
         long possibilitiesVertical = ((OCCUPIED&FileMasks8[s % 8]) - (2 * binaryS)) ^ Long.reverse(Long.reverse(OCCUPIED&FileMasks8[s % 8]) - (2 * Long.reverse(binaryS)));
-        //drawBitboard((possibilitiesHorizontal&RankMasks8[s / 8]) | (possibilitiesVertical&FileMasks8[s % 8]));
         return (possibilitiesHorizontal&RankMasks8[s / 8]) | (possibilitiesVertical&FileMasks8[s % 8]);
     }
     static long DiagAndAntiDiagMoves(int s)
@@ -60,58 +61,47 @@ public class Moves {
         long binaryS=1L<<s;
         long possibilitiesDiagonal = ((OCCUPIED&DiagonalMasks8[(s / 8) + (s % 8)]) - (2 * binaryS)) ^ Long.reverse(Long.reverse(OCCUPIED&DiagonalMasks8[(s / 8) + (s % 8)]) - (2 * Long.reverse(binaryS)))&NOT_WHITE_PIECES;
         long possibilitiesAntiDiagonal = ((OCCUPIED&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]) - (2 * binaryS)) ^ Long.reverse(Long.reverse(OCCUPIED&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]) - (2 * Long.reverse(binaryS)))&NOT_WHITE_PIECES;
-        return (possibilitiesDiagonal&DiagonalMasks8[(s / 8) + (s % 8)]) | (possibilitiesAntiDiagonal&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]);
+        return (possibilitiesDiagonal & DiagonalMasks8[(s / 8) + (s % 8)]) | (possibilitiesAntiDiagonal & AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]);
     }
 
-    public String possibleMovesW(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK) {
+    public String possibleMovesW(String history, GameState gamestate) {
         System.out.println("run possibleMovesW in moves");
-        NOT_WHITE_PIECES= ~(WP|WN|WB|WR|WQ|WK|BK);//added BK to avoid illegal capture
-        BLACK_PIECES=BP|BN|BB|BR|BQ;//omitted BK to avoid illegal capture
-        WHITE_PIECES = WP|WN|WB|WR|WQ;//omitted WK to ovaid illegal capture
-        NOT_BLACK_PIECES = ~(BP|BN|BB|BR|BQ|WK);
-        EMPTY=~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
-        OCCUPIED=WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK;
-        EMPTY=~OCCUPIED;
-        
-        //drawBitboard(DiagAndAntiDiagMoves(36));
-        //timeExperiment(WP);
+
+        NOT_WHITE_PIECES = gamestate.NOT_WHITE_PIECES;
+        BLACK_PIECES = gamestate.BLACK_PIECES;
+        WHITE_PIECES = gamestate.WHITE_PIECES;
+        NOT_BLACK_PIECES = gamestate.NOT_BLACK_PIECES;
+        OCCUPIED = gamestate.OCCUPIED;
+        EMPTY = gamestate.EMPTY;
         list=//+
-            possibleN(OCCUPIED,WN,true)+
-            possiblePW(history,WP,BP)+
-            possibleB(OCCUPIED,WB, true)+
-            possibleR(OCCUPIED, WR, true)+
-            possibleQ(OCCUPIED,WQ,true)+
-            possibleK(OCCUPIED, WK, true);
-        unsafeForBlack(WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK);
+            possibleN(OCCUPIED,gamestate.WN,true)+
+            possiblePW(history,gamestate.WP,gamestate.BP)+
+            possibleB(OCCUPIED,gamestate.WB, true)+
+            possibleR(OCCUPIED, gamestate.WR, true)+
+            possibleQ(OCCUPIED,gamestate.WQ,true)+
+            possibleK(OCCUPIED, gamestate.WK, true);
+        unsafeForBlack(gamestate);
         return list;
     }
     
-    public String possibleMovesB(String history,long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK){
+    public String possibleMovesB(String history,GameState gamestate){
         System.out.println("run possibleMovesB in Moves");
-        NOT_WHITE_PIECES= ~(WP|WN|WB|WR|WQ|WK|BK);//added BK to avoid illegal capture
-        BLACK_PIECES=BP|BN|BB|BR|BQ;//omitted BK to avoid illegal capture
-        WHITE_PIECES = WP|WN|WB|WR|WQ;//omitted WK to ovaid illegal capture
-        NOT_BLACK_PIECES = ~(BP|BN|BB|BR|BQ|WK);
-        EMPTY=~(WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK);
-        OCCUPIED=WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK;
-        EMPTY=~OCCUPIED;
-
-        list = possibleN(OCCUPIED,BN,false)+
-        possibleB(OCCUPIED,BB, false)+
-        possibleR(OCCUPIED, BR,false)+
-        possibleQ(OCCUPIED,BQ,false)+
-        possibleK(OCCUPIED, BK, false);
+        list = possibleN(OCCUPIED,gamestate.BN,false)+
+        possibleB(OCCUPIED,gamestate.BB, false)+
+        possibleR(OCCUPIED, gamestate.BR,false)+
+        possibleQ(OCCUPIED,gamestate.BQ,false)+
+        possibleK(OCCUPIED, gamestate.BK, false);
         return list;
     }
     
 
     public boolean isLegal(String lastMove, String move){
-        //possibleMovesW(move, NOT_WHITE_PIECES, KNIGHT_C6, KING_SIDE, KING_B7, FILE_H, FILE_GH, FILE_AB, FILE_A, EXTENDED_CENTER, EMPTY, CENTER, BLACK_PIECES);
-
         String legalMoves = list;
         System.out.println(getPossibleMovesReadable(legalMoves));
+
         boolean isLegal = legalMoves.contains(move);
         System.out.println("isLegal == "+ isLegal);
+        
         return isLegal;
         
     }
@@ -127,6 +117,7 @@ public class Moves {
             String syllableThree = "";
             String syllableFour = "";
             for(int c = 0; c < 4; c++){
+                //TODO replace char ' ' with char '0'
                 char charAt = (i != 0) ? stringMoves.charAt(((i*4))+c) : stringMoves.charAt(c);
                 int numAt = charAt - ' ' - 16;
                 switch(c){
@@ -147,12 +138,14 @@ public class Moves {
 
     public static String possibleN(long OCCUPIED,long N, boolean isWhite)
     {
+        System.out.println("run possibleN in moves");
         String list="";
         long i=N&~(N-1);
         long possibility;
         long notPieces = (isWhite)? NOT_WHITE_PIECES : NOT_BLACK_PIECES;
         while(i != 0)
         {
+            System.out.println("found knight in posssibleMovesN in moves");
             int iLocation=Long.numberOfTrailingZeros(i);
             if (iLocation>18)
             {
@@ -171,6 +164,7 @@ public class Moves {
             long j= possibility&~(possibility-1);
             while (j != 0)
             {
+                System.out.println("found possible knight move");
                 int index=Long.numberOfTrailingZeros(j);
                 list+=""+(iLocation/8)+(iLocation%8)+(index/8)+(index%8);
                 possibility&=~j;
@@ -500,16 +494,15 @@ public class Moves {
         return list;
     }
 
-    public static long unsafeForBlack(long WP,long WN,long WB,long WR,long WQ,long WK,long BP,long BN,long BB,long BR,long BQ,long BK)
+    public static long unsafeForBlack(GameState gamestate)
     {
         long unsafe;
-        OCCUPIED=WP|WN|WB|WR|WQ|WK|BP|BN|BB|BR|BQ|BK;
         //pawn
-        unsafe=((WP>>>7)&~FILE_A);//pawn capture right
-        unsafe|=((WP>>>9)&~FILE_H);//pawn capture left
+        unsafe=((gamestate.WP>>>7)&~FILE_A);//pawn capture right
+        unsafe|=((gamestate.WP>>>9)&~FILE_H);//pawn capture left
         long possibility;
         //knight
-        long i=WN&~(WN-1);
+        long i=gamestate.WN&~(gamestate.WN-1);
         while(i != 0)
         {
             int iLocation=Long.numberOfTrailingZeros(i);
@@ -529,11 +522,11 @@ public class Moves {
             }
             unsafe |= possibility;
             
-            WN&=~i;
-            i=WN&~(WN-1);
+            gamestate.WN&=~i;
+            i=gamestate.WN&~(gamestate.WN-1);
         }
         //bishop/queen
-        long QB=WQ|WB;
+        long QB=gamestate.WQ|gamestate.WB;
         i=QB&~(QB-1);
         while(i != 0)
         {
@@ -544,7 +537,7 @@ public class Moves {
             i=QB&~(QB-1);
         }
         //rook/queen
-        long QR=WQ|WR;
+        long QR=gamestate.WQ|gamestate.WR;
         i=QR&~(QR-1);
         while(i != 0)
         {
@@ -556,7 +549,7 @@ public class Moves {
         }
        
         //king
-        int iLocation=Long.numberOfTrailingZeros(WK);
+        int iLocation=Long.numberOfTrailingZeros(gamestate.WK);
         System.out.println("king trails = "+iLocation) ;
         if (iLocation>9)
         {
@@ -573,6 +566,7 @@ public class Moves {
             possibility &=~FILE_AB;
         }
         unsafe |= possibility;
+        drawBitboard(unsafe);
         return unsafe;
     }
 

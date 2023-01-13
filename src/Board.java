@@ -1,11 +1,10 @@
 import java.util.Arrays;
 
-import Pieces.Piece;
-
 public class Board {
 
 
-    public long WP = 0L, BP = 0L, WN = 0L, BN = 0L, WR = 0L, BR = 0L, WQ = 0L, BQ = 0L, WB = 0L, BB = 0L, WK = 0L, BK = 0L;
+    public static long WP = 0L, BP = 0L, WN = 0L, BN = 0L, WR = 0L, BR = 0L, WQ = 0L, BQ = 0L, WB = 0L, BB = 0L, WK = 0L, BK = 0L;
+    GameState gamestate = new GameState();
     Moves moveFinder = new Moves();
     public char[][] board = {
 
@@ -41,16 +40,16 @@ public class Board {
         if(!readable){
             if(isWhite){
                 System.out.println("run getPossibleMoves, isWhite == true in Board");
-                return(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+                return(moveFinder.possibleMovesW(history,gamestate));
             }else{
                 System.out.println("run getPossibleMoves, isWhite == false in Board");
-                return(moveFinder.possibleMovesB(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK));
+                return(moveFinder.possibleMovesB(history,gamestate));
             }
         }else{
             if(isWhite){
-                return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesW(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK)));
+                return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesW(history, gamestate)));
             }else{
-                return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesB(history, WP, WN, WB, WR, WQ, WK, BP, BN, BB, BR, BQ, BK)));
+                return(moveFinder.getPossibleMovesReadable(moveFinder.possibleMovesB(history, gamestate)));
             }
             
         }
@@ -67,18 +66,18 @@ public class Board {
             newChessBoard[i/8][i%8] = " ";
         }
         for(int i = 0; i < 64; i++){
-            if( ((this.WP>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "P";}
-            if( ((this.WR>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "R";}
-            if( ((this.WN>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "N";}
-            if( ((this.WB>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "B";}
-            if( ((this.WQ>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "Q";}
-            if( ((this.WK>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "K";}
-            if( ((this.BP>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "p";}
-            if( ((this.BR>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "r";}
-            if( ((this.BN>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "n";}
-            if( ((this.BB>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "b";}
-            if( ((this.BQ>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "q";}
-            if( ((this.BK>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "k";}
+            if( ((WP>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "P";}
+            if( ((WR>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "R";}
+            if( ((WN>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "N";}
+            if( ((WB>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "B";}
+            if( ((WQ>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "Q";}
+            if( ((WK>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "K";}
+            if( ((BP>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "p";}
+            if( ((BR>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "r";}
+            if( ((BN>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "n";}
+            if( ((BB>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "b";}
+            if( ((BQ>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "q";}
+            if( ((BK>>i)&1) == 1)  {newChessBoard[i/8][i%8] = "k";}
         }
         for(int i = 0; i < 8; i++){
             System.out.println(Arrays.toString(newChessBoard[i]));
@@ -124,6 +123,7 @@ public class Board {
             }
 
         }
+        gamestate.updateBitboards();
     }
 
     public static long stringToBitboard(String binary){

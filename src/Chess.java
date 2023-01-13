@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import java.awt.*;
 
-public class AlphaBetaChess {
+public class Chess {
 
     public static void main(String[] args) {
         JFrame gameFrame = new JFrame("Chess");
@@ -16,8 +16,6 @@ public class AlphaBetaChess {
         gameFrame.setSize(800,800);
         gameFrame.setResizable(false);
         gameFrame.setLayout(new BorderLayout());
-       //GUI ui = new GUI();
-       //gameFrame.add(ui);
         char[][] board = {
 
             {'r','n','b','q','k','b','n','r'},
@@ -34,10 +32,9 @@ public class AlphaBetaChess {
         BoardPanel frontBoard;
         Board backBoard = new Board();
         
-        //backBoard.changeBoardFen("k7/p2q4/3br3/8/8/8/5K2/8 w - - 0 1",false);
-        backBoard.changeBoardArray(board, false);
+        backBoard.changeBoardFen("k7/p2q4/3br3/8/7N/8/5K2/8 w - - 0 1",false);
+        //backBoard.changeBoardArray(board, false);
         frontBoard = new BoardPanel(backBoard.getBoard());
-        String possibleMoves = frontBoard.possibleMoves("1434", true, true);
         
         gameFrame.add(frontBoard);
         gameFrame.pack();
