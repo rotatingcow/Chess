@@ -93,8 +93,6 @@ public class Moves {
         possibleK(OCCUPIED, gamestate.BK, false);
         return list;
     }
-    
-
     public boolean isLegal(String lastMove, String move){
         String legalMoves = list;
         System.out.println(getPossibleMovesReadable(legalMoves));
@@ -136,16 +134,14 @@ public class Moves {
         return(finalList);
     }
 
-    public static String possibleN(long OCCUPIED,long N, boolean isWhite)
-    {
-        System.out.println("run possibleN in moves");
+    public static String possibleN(long OCCUPIED,long N, boolean isWhite){
         String list="";
         long i=N&~(N-1);
         long possibility;
         long notPieces = (isWhite)? NOT_WHITE_PIECES : NOT_BLACK_PIECES;
         while(i != 0)
         {
-            System.out.println("found knight in posssibleMovesN in moves");
+            
             int iLocation=Long.numberOfTrailingZeros(i);
             if (iLocation>18)
             {

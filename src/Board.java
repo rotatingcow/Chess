@@ -83,7 +83,6 @@ public class Board {
             System.out.println(Arrays.toString(newChessBoard[i]));
         }
     }
-//, long WP, long WN, long WB, long WQ, long WK, long WR, long BP, long BN, long BB, long BQ, long BK, long BR
 
     public void arrayToBitBoard(char[][] chessboard){
         String binary;
@@ -92,7 +91,6 @@ public class Board {
 
         
         for(int i = 0; i < 64; i++){
- 
             binary = "0000000000000000000000000000000000000000000000000000000000000000";
             binary = binary.substring(i,i+1)+"1"+binary.substring(0,i);
             switch(chessboard[i/8][i%8]){

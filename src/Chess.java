@@ -1,11 +1,5 @@
 
-
-
 import javax.swing.*;
-
-
-
-
 import java.awt.*;
 
 public class Chess {
@@ -17,7 +11,6 @@ public class Chess {
         gameFrame.setResizable(false);
         gameFrame.setLayout(new BorderLayout());
         char[][] board = {
-
             {'r','n','b','q','k','b','n','r'},
             {'p','p','p','p','p','p','p','p'},
             {' ',' ',' ',' ',' ',' ',' ',' '},
@@ -26,7 +19,6 @@ public class Chess {
             {' ',' ',' ',' ',' ',' ',' ',' '},
             {'P','P','P','P','P','P','P','P'},
             {'R','N','B','Q','K','B','N','R'}
-
         };
 
         BoardPanel frontBoard;

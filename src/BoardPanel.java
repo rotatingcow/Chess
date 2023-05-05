@@ -168,16 +168,14 @@ public class BoardPanel extends JPanel implements MouseInputListener{
         for(int x = 0; x < boardTiles.size(); x++){
             if(boardTiles.get(x).getMousePosition() != null){
                 if(firstClick){
-                    if(boardTiles.get(x).getRealPiece() != null){
-                        if(boardTiles.get(x).getRealPiece().getColor() == toMove){
-                            
-                            startingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+""+((boardTiles.get(x).getTileIndex()%8)));
-                            firstClick = false;
-                            
-                        }
+                    if(boardTiles.get(x).getRealPiece() != null &&
+                       boardTiles.get(x).getRealPiece().getColor() == toMove){
+
+                        startingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+((boardTiles.get(x).getTileIndex()%8)));
+                        firstClick = false;
                     }
                 }else{
-                    endingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+""+((boardTiles.get(x).getTileIndex()%8)));
+                    endingSquare = ((""+(boardTiles.get(x).getTileIndex()/8))+((boardTiles.get(x).getTileIndex()%8)));
                     String move = startingSquare + endingSquare;
                     makeMove(move);
                     firstClick = true;
@@ -187,11 +185,6 @@ public class BoardPanel extends JPanel implements MouseInputListener{
 
         }
     }
-        
-        
-    
-        
-        
     
     @Override
     public void mouseReleased(MouseEvent e) {
